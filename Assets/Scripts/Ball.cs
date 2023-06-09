@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -7,14 +6,16 @@ using UnityEngine.UI;
 public class Ball : MonoBehaviour
 {
     [SerializeField] Paddle paddle1;
-    [SerializeField] float xPush = 2f;
-    [SerializeField] float yPush = 7f;
+    [SerializeField] float xPush = 7f;
+    [SerializeField] float yPush = 2f;
     [SerializeField] AudioClip[] ballSounds;
-    [SerializeField] float randomFactor = 0.7f;
+    [SerializeField] float randomFactor = 0.8f;
 
-    public GameObject enableButton;
-    public GameObject disableResumeButton;
-    public GameObject disablePlayButton;    
+    GameObject enableButton;
+    GameObject disableResumeButton;
+    GameObject disablePlayButton;
+
+
     public Text adLoadTimer;
     //State
     Vector2 paddleToBallVector;

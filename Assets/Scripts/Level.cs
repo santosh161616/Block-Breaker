@@ -6,14 +6,14 @@ using UnityEngine.UI;
 public class Level : MonoBehaviour
 {
     [SerializeField] int breakableBlocks;
-    SceneLoader sceneLoader;
+    [SerializeField] SceneLoader sceneLoader;
     public Text textAd;
     public GameObject enableCanvas;
     private AdManager adInstance;
 
     private void Start()
     {
-        sceneLoader = FindObjectOfType<SceneLoader>();
+        // sceneLoader = FindObjectOfType<SceneLoader>();
         adInstance = GetComponent<AdManager>();
     }
 

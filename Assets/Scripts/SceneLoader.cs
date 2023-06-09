@@ -26,7 +26,7 @@ public class SceneLoader : MonoBehaviour
     }
     public void LoadStartScean()
     {   
-        
+        // SceneManager.LoadScene(01);
         SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
         gameSession.GameOver();
     }

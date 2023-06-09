@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,8 +12,8 @@ public class Block : MonoBehaviour
     Level level;    //cached variable.
 
     //State variable
-    [SerializeField] int timeHits;  //Only for debug purpose
-    private void Start()
+    [SerializeField] int hitCount;  //Only for debug purpose
+    private void Awake()
     {
         CountBreakableBlocks();
     }
@@ -39,11 +38,12 @@ public class Block : MonoBehaviour
 
     private void ShowNextHitSprite()
     {
-        int spriteIndex = timeHits - 1;
-        if(hitSprites[spriteIndex] != null)
+        int spriteIndex = hitCount - 1;
+        // if(hitSprites[spriteIndex] != null)
+        if (spriteIndex >= 0 && spriteIndex < hitSprites.Length && hitSprites[spriteIndex] != null)
         {
             GetComponent<SpriteRenderer>().sprite = hitSprites[spriteIndex];
-        }
+        }       
         else
         {
             Debug.LogError("Block Sprite Missing Error!" +gameObject.name);
@@ -52,9 +52,9 @@ public class Block : MonoBehaviour
 
     private void HandleHit()
     {
-        timeHits++;
+        hitCount++;
         int maxHits = hitSprites.Length + 1;
-        if (timeHits >= maxHits)
+        if (hitCount >= maxHits)
         {
             DestroyBlock();
         }
