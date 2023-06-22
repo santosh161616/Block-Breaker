@@ -5,12 +5,12 @@ using UnityEngine;
 public class Paddle : MonoBehaviour
 {
     [SerializeField] float screenWidthInUnits = 16f;
-    [SerializeField] float minX = 5.54f;
+    [SerializeField] float minXPosition = 5.54f;
     [SerializeField] float maxX = 10.49f;
 
     private float deltaX, deltaY;
     private Rigidbody2D rb;
-    private Vector2 temp; 
+
     // Vector2 moveX = ;
     // Start is called before the first frame update
     void Start()
@@ -22,14 +22,13 @@ public class Paddle : MonoBehaviour
     void Update()
     {
         Vector2 paddlePos = new Vector2(transform.position.x, transform.position.y);
-        paddlePos.x = Mathf.Clamp(GetXpos(), minX, maxX);
+        paddlePos.x = Mathf.Clamp(GetXpos(), minXPosition, maxX);
         transform.position = paddlePos;
 
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
             Vector2 touchPos = Camera.main.ScreenToWorldPoint(touch.position);
-            temp = touchPos;
 
             switch (touch.phase)
             {

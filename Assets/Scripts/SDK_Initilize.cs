@@ -11,16 +11,16 @@ public class SDK_Initilize : MonoBehaviour, IUnityAdsInitializationListener
 
     void Awake()
     {
-        InitializeAds();
+       // InitializeAds();
     }
 
-    public void InitializeAds()
+   /* public void InitializeAds()
     {
         _gameId = (Application.platform == RuntimePlatform.IPhonePlayer)
             ? _iOsGameId
             : _androidGameId;
-        Advertisement.Initialize(_gameId, _testMode, _enablePerPlacementMode, this);
-    }    
+        Advertisement.Initialize(_gameId, _testMode,_enablePerPlacementMode, this);
+    }*/    
 
     public void OnInitializationComplete()
     {
