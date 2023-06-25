@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class LoseCollider : MonoBehaviour
 {    
-    public GameObject enableResumeButton;
+    public GameObject enableResumButton;
     public GameObject enableResetButton;
     public static bool checkResumeEligiblity = true;
     private void OnTriggerEnter2D(Collider2D collision)
@@ -13,7 +13,7 @@ public class LoseCollider : MonoBehaviour
         if (checkResumeEligiblity)
         {
             enableResetButton.SetActive(true);
-            enableResumeButton.SetActive(true);
+            enableResumButton.SetActive(true);
         }
         else
         {
@@ -22,7 +22,7 @@ public class LoseCollider : MonoBehaviour
         
         if(!Ball.enableResume)
         {
-            SceneManager.LoadScene(53);
+            SceneManager.LoadScene("03 Game Over");
             Ball.hasStarted = false;
         }                
     }
