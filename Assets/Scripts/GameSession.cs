@@ -19,9 +19,19 @@ public class GameSession : MonoBehaviour
    
     //State variables.
     [SerializeField] int currentScore = 0;
+    public static GameSession instance;
 
     private void Awake()
     {
+        if(instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
         int gameStatusCount = FindObjectsOfType<GameSession>().Length;
         if(gameStatusCount > 1)
         {

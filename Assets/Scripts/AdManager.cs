@@ -34,13 +34,13 @@ public class AdManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowList
         Advertisement.Show(_adUnitId, this);
     }
 
-/*    public void DisplayAdNow()
+    public void DisplayAdNow()
     {
-        if (Advertisement.IsReady(_adUnitId))
+        /*if (Advertisement.IsReady(_adUnitId))
         {
             ShowAd();
-        }
-    }*/
+        }*/
+    }
 
     // Implement Load Listener and Show Listener interface methods:  
     public void OnUnityAdsAdLoaded(string adUnitId)

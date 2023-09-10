@@ -6,15 +6,15 @@ using UnityEngine.UI;
 public class Level : MonoBehaviour
 {
     [SerializeField] int breakableBlocks;
-    [SerializeField] SceneLoader sceneLoader;
-    public Text textAd;
+
+  //  public Text textAd;
     public GameObject enableCanvas;
-    private AdManager adInstance;
+  //  private AdManager adInstance;
 
     private void Start()
     {
-        // sceneLoader = FindObjectOfType<SceneLoader>();
-        adInstance = GetComponent<AdManager>();
+
+      //  adInstance = GetComponent<AdManager>();
     }
 
     public void CountBlocks()
@@ -41,12 +41,12 @@ public class Level : MonoBehaviour
         while(t > 0)
         {
             t--;
-            textAd.text = "Hold on: " + t;            
+        //    textAd.text = "Hold on: " + t;            
             yield return new WaitForSeconds(1);
         }
         enableCanvas.SetActive(false);        
-        adInstance.DisplayAdNow();
+       // adInstance.DisplayAdNow();
         Ball.enableInput = true;
-        sceneLoader.LoadNextScene();
+        SceneLoader.Instance.LoadNextScene();
     }
 }

@@ -4,12 +4,14 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class SceneLoader : MonoBehaviour
 {
-    GameSession gameSession;
     private int currentLevel;
-
+    public static SceneLoader Instance;
     private void Start()
     {
-        gameSession = FindObjectOfType<GameSession>();
+        if(Instance == null)
+        {
+            Instance = this;
+        }
         currentLevel = PlayerPrefs.GetInt("CurrentLevel");
     }
     public void LoadNextScene()
@@ -21,13 +23,13 @@ public class SceneLoader : MonoBehaviour
     }
     public void ScoreReset()
     {
-        gameSession.ResetHighScore();
+        GameSession.instance.ResetHighScore();
     }
     public void LoadStartScean()
-    {   
-        // SceneManager.LoadScene(01);
-        SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
-        gameSession.GameOver();
+    {
+        SceneManager.LoadScene(1);
+       // SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
+        GameSession.instance.GameOver();
     }
 
     public void QuitGame()

@@ -9,9 +9,9 @@ public class Ball : MonoBehaviour
     [SerializeField] float xPush = 7f;
     [SerializeField] float yPush = 2f;
     [SerializeField] AudioClip[] ballSounds;
-    [SerializeField] float randomFactor = 0.8f;
+    [SerializeField] float randomFactor = 2f;
 
-    GameObject enableButton;
+   // GameObject enableButton;
     GameObject disableResumeButton;
     GameObject disablePlayButton;
 
@@ -28,7 +28,7 @@ public class Ball : MonoBehaviour
     Rigidbody2D myRigidBody2D;
 
     //Advertisement
-    RewardedAds rewarded;
+  //  RewardedAds rewarded;
 
     // Start is called before the first frame update
     void Start()
@@ -36,7 +36,7 @@ public class Ball : MonoBehaviour
         paddleToBallVector = transform.position - paddle1.transform.position;
         myAudioSource = GetComponent<AudioSource>();
         myRigidBody2D = GetComponent<Rigidbody2D>();
-        rewarded = FindObjectOfType<RewardedAds>();
+    //    rewarded = FindObjectOfType<RewardedAds>();
     }
 
     // Update is called once per frame
@@ -50,9 +50,9 @@ public class Ball : MonoBehaviour
 
     public void LaunchOnMouseClick()
     {
-        if (enableInput)
+        if (enableInput && !hasStarted)
         {
-            enableButton.SetActive(false);
+           // enableButton.SetActive(false);
             hasStarted = true;                        
             myRigidBody2D.velocity = new Vector2(xPush, yPush);
         }        
@@ -75,8 +75,8 @@ public class Ball : MonoBehaviour
         }
         hasStarted = false;
         disableResumeButton.SetActive(false);
-        rewarded.ShowAd();
-        enableButton.SetActive(true);
+       // rewarded.ShowAd();
+      //  enableButton.SetActive(true);
     }
 
     public void ResetGameLevel()
@@ -95,8 +95,8 @@ public class Ball : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         Vector2 velocityTweak = new Vector2(Random.Range(0f, randomFactor), Random.Range(0f, randomFactor));
-        if(enableInput)
-        {            
+        if (enableInput)
+        {
             AudioClip clip = ballSounds[UnityEngine.Random.Range(0, ballSounds.Length)];
             myAudioSource.PlayOneShot(clip);
 
@@ -104,6 +104,6 @@ public class Ball : MonoBehaviour
             myRigidBody2D.velocity += velocityTweak;
 
         }
-        
+
     }
 }
