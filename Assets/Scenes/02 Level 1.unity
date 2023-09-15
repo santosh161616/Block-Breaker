@@ -3892,10 +3892,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 511887393371878855, guid: d3ec9b07002196647948abffca756f79,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2141683999105866473, guid: d3ec9b07002196647948abffca756f79,
         type: 3}
       propertyPath: m_Name
       value: Leve_Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 7606966731252657716, guid: d3ec9b07002196647948abffca756f79,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8690875838110714151, guid: d3ec9b07002196647948abffca756f79,
+        type: 3}
+      propertyPath: randomFactor
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8868825327300706523, guid: d3ec9b07002196647948abffca756f79,
         type: 3}

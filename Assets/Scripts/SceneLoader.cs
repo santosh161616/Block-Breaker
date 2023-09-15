@@ -26,9 +26,8 @@ public class SceneLoader : MonoBehaviour
         GameSession.instance.ResetHighScore();
     }
     public void LoadStartScean()
-    {
-        SceneManager.LoadScene(1);
-       // SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
+    {        
+        SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
         GameSession.instance.GameOver();
     }
 
