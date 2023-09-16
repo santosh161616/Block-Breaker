@@ -13,6 +13,7 @@ public class SceneLoader : MonoBehaviour
             Instance = this;
         }
         currentLevel = PlayerPrefs.GetInt("CurrentLevel");
+       // SceneManager.LoadScene(0);
     }
     public void LoadNextScene()
     {
