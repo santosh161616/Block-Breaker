@@ -18,7 +18,7 @@ public class RewardedAds : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowLi
             : _androidAdUnitId;
 
         //Disable button until ad is ready to show
-       // _showAdButton.interactable = false;
+        // _showAdButton.interactable = false;
     }
     private void Start()
     {
@@ -40,9 +40,9 @@ public class RewardedAds : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowLi
         if (adUnitId.Equals(_adUnitId))
         {
             // Configure the button to call the ShowAd() method when clicked:
-           // _showAdButton.onClick.AddListener(ShowAd);
+            // _showAdButton.onClick.AddListener(ShowAd);
             // Enable the button for users to click:
-           // _showAdButton.interactable = true;
+            // _showAdButton.interactable = true;
         }
     }
 
@@ -64,7 +64,8 @@ public class RewardedAds : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowLi
             // Grant a reward.
 
             // Load another ad:
-            Advertisement.Load(_adUnitId, this);
+          //  Advertisement.Load(_adUnitId, this);
+            LoadAd();
         }
     }
 

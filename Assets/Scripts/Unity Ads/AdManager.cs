@@ -44,7 +44,7 @@ public class AdManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowList
     private void InitializeAds()
     {
         // Initialize Unity Ads here if needed.
-        // Advertisement.Initialize(gameId, testMode);
+         Advertisement.Initialize(rewardedAdUnitId, true);
     }
 
     // Load Interstitial Ad:

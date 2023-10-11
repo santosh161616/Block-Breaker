@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 public class Ball : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class Ball : MonoBehaviour
     GameObject disablePlayButton;
 
 
-    public Text adLoadTimer;
+    public TMP_Text adLoadTimer;
     //State
     Vector2 paddleToBallVector;
     public static bool hasStarted = false;
@@ -27,16 +28,22 @@ public class Ball : MonoBehaviour
     AudioSource myAudioSource;
     Rigidbody2D myRigidBody2D;
 
+    public static Ball instance;
+
     //Advertisement
-    //  RewardedAds rewarded;
+    RewardedAds adsInstance;
 
     // Start is called before the first frame update
     void Start()
     {
+        if (instance == null)
+        {
+            instance = this;
+        }
         paddleToBallVector = transform.position - paddle1.transform.position;
         myAudioSource = GetComponent<AudioSource>();
         myRigidBody2D = GetComponent<Rigidbody2D>();
-        //    rewarded = FindObjectOfType<RewardedAds>();
+        adsInstance = FindObjectOfType<RewardedAds>();
     }
 
     // Update is called once per frame
@@ -63,6 +70,7 @@ public class Ball : MonoBehaviour
         disablePlayButton.SetActive(false);
         LoseCollider.checkResumeEligiblity = false;
         StartCoroutine(AdLoadTimer());
+        adsInstance.ShowAd();
     }
     IEnumerator AdLoadTimer()
     {
@@ -70,7 +78,7 @@ public class Ball : MonoBehaviour
         while (t > 0)
         {
             t--;
-            adLoadTimer.text = "Ad in " + t;
+            adLoadTimer.text = t.ToString();
             yield return new WaitForSeconds(1);
         }
         hasStarted = false;
@@ -101,11 +109,11 @@ public class Ball : MonoBehaviour
             myAudioSource.PlayOneShot(clip);
 
             myRigidBody2D.velocity = myRigidBody2D.velocity.normalized * 7f;
-            Debug.Log(myRigidBody2D.velocity.normalized + "Before Tweak"+velocityTweak);
+            Debug.Log(myRigidBody2D.velocity.normalized + "Before Tweak" + velocityTweak);
 
             myRigidBody2D.velocity += velocityTweak;
 
-            Debug.Log(myRigidBody2D.velocity + "Velocity Tweak"+velocityTweak);
+            Debug.Log(myRigidBody2D.velocity + "Velocity Tweak" + velocityTweak);
         }
 
     }
