@@ -12,12 +12,6 @@ public class Ball : MonoBehaviour
     [SerializeField] AudioClip[] ballSounds;
     [SerializeField] float randomFactor = .2f;
 
-    // GameObject enableButton;
-    GameObject disableResumeButton;
-    GameObject disablePlayButton;
-
-
-    public TMP_Text adLoadTimer;
     //State
     Vector2 paddleToBallVector;
     public static bool hasStarted = false;
@@ -30,9 +24,6 @@ public class Ball : MonoBehaviour
 
     public static Ball instance;
 
-    //Advertisement
-    RewardedAds adsInstance;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -43,7 +34,6 @@ public class Ball : MonoBehaviour
         paddleToBallVector = transform.position - paddle1.transform.position;
         myAudioSource = GetComponent<AudioSource>();
         myRigidBody2D = GetComponent<Rigidbody2D>();
-        adsInstance = FindObjectOfType<RewardedAds>();
     }
 
     // Update is called once per frame
@@ -63,35 +53,6 @@ public class Ball : MonoBehaviour
             hasStarted = true;
             myRigidBody2D.velocity = new Vector2(xPush, yPush);
         }
-    }
-
-    public void ResumeGame()
-    {
-        disablePlayButton.SetActive(false);
-        LoseCollider.checkResumeEligiblity = false;
-        StartCoroutine(AdLoadTimer());
-        adsInstance.ShowAd();
-    }
-    IEnumerator AdLoadTimer()
-    {
-        int t = 3;
-        while (t > 0)
-        {
-            t--;
-            adLoadTimer.text = t.ToString();
-            yield return new WaitForSeconds(1);
-        }
-        hasStarted = false;
-        disableResumeButton.SetActive(false);
-        // rewarded.ShowAd();
-        //  enableButton.SetActive(true);
-    }
-
-    public void ResetGameLevel()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        LoseCollider.checkResumeEligiblity = true;
-        hasStarted = false;
     }
 
     private void LockBallToPaddle()

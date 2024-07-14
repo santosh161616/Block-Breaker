@@ -5,8 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class LoseCollider : MonoBehaviour
 {    
-    public GameObject enableResumButton;
-    public GameObject enableResetButton;
     public static bool checkResumeEligiblity = true;
 
     Ball ballInstance;
@@ -14,13 +12,10 @@ public class LoseCollider : MonoBehaviour
     {
         if (checkResumeEligiblity)
         {
-            enableResetButton.SetActive(true);
-            enableResumButton.SetActive(true);
+            GameSession.instance.enableResume.SetActive(true);
+            GameSession.instance.tryAgain.SetActive(true);
+
             Ball.instance.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
-        }
-        else
-        {
-            enableResetButton.SetActive(true);
         }
         
         if(!Ball.enableResume)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameSession : MonoBehaviour
 {
@@ -15,15 +16,21 @@ public class GameSession : MonoBehaviour
 
     [SerializeField] private Sprite[] buttonSprite;
     [SerializeField] private Image toggleImage;
-    private bool isPaused = false;
-   
-    //State variables.
     [SerializeField] int currentScore = 0;
+
+    private bool isPaused = false;
+    public TMP_Text adLoadTimer;
+
+    //State variables.
     public static GameSession instance;
+
+    RewardedAds adsInstance;
+    public GameObject enableResume;
+    public GameObject tryAgain;
 
     private void Awake()
     {
-        if(instance == null)
+        if (instance == null)
         {
             instance = this;
         }
@@ -33,7 +40,7 @@ public class GameSession : MonoBehaviour
         }
 
         int gameStatusCount = FindObjectsOfType<GameSession>().Length;
-        if(gameStatusCount > 1)
+        if (gameStatusCount > 1)
         {
             gameObject.SetActive(false);
             Destroy(gameObject);
@@ -48,7 +55,8 @@ public class GameSession : MonoBehaviour
     void Start()
     {
         highScoreText.text = PlayerPrefs.GetInt("HighScore").ToString();
-        displayLevel.text = "Level: " +PlayerPrefs.GetInt("CurrentLevel").ToString();
+        displayLevel.text = "Level: " + PlayerPrefs.GetInt("CurrentLevel").ToString();
+        adsInstance = FindObjectOfType<RewardedAds>();
     }
 
     // Update is called once per frame
@@ -62,9 +70,40 @@ public class GameSession : MonoBehaviour
         {
             Time.timeScale = 0f;
         }
-        
+
     }
 
+    IEnumerator AdLoadTimer()
+    {
+        int t = 3;
+        while (t > 0)
+        {
+            t--;
+            adLoadTimer.text = t.ToString();
+            yield return new WaitForSeconds(1);
+        }
+
+        Ball.hasStarted = false;
+        // rewarded.ShowAd();
+        //  enableButton.SetActive(true);
+    }
+
+    public void ResumeGame()
+    {
+        if (LoseCollider.checkResumeEligiblity)
+        {
+            Ball.instance.StartCoroutine(AdLoadTimer());
+            adsInstance.ShowAd();
+            LoseCollider.checkResumeEligiblity = false;
+        }
+    }
+
+    public void ResetGameLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        LoseCollider.checkResumeEligiblity = true;
+        Ball.hasStarted = false;
+    }
     public void AddToScore()
     {
         currentScore += pointPerBlockDestroyed;
@@ -73,7 +112,7 @@ public class GameSession : MonoBehaviour
         {
             PlayerPrefs.SetInt("HighScore", currentScore);
         }
-        
+
         //        scoreText.text = currentScore.ToString();
     }
 
@@ -85,9 +124,9 @@ public class GameSession : MonoBehaviour
 
     public void PauseGame()
     {
-        if(isPaused)
+        if (isPaused)
         {
-            toggleImage.sprite = buttonSprite[0];            
+            toggleImage.sprite = buttonSprite[0];
             isPaused = false;
         }
         else

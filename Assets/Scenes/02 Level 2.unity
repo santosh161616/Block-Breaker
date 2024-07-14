@@ -227,12 +227,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 18062363}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &29768577 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 29768577, guid: d3ec9b07002196647948abffca756f79,
-    type: 3}
-  m_PrefabInstance: {fileID: 511887393469740671}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &50682076
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3897,11 +3891,6 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3340409022861763489, guid: 5ec46ee7b9d210b4bbcf567304e2a455,
         type: 3}
-      propertyPath: m_RootOrder
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 3340409022861763489, guid: 5ec46ee7b9d210b4bbcf567304e2a455,
-        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -3950,6 +3939,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3340409022861763502, guid: 5ec46ee7b9d210b4bbcf567304e2a455,
+        type: 3}
+      propertyPath: adLoadTimer
+      value: 
+      objectReference: {fileID: 511887393469740672}
     - target: {fileID: 3340409022861763503, guid: 5ec46ee7b9d210b4bbcf567304e2a455,
         type: 3}
       propertyPath: m_Name
@@ -4274,12 +4268,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 12}
   m_EdgeRadius: 0
---- !u!1 &1905371453 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1905371453, guid: d3ec9b07002196647948abffca756f79,
-    type: 3}
-  m_PrefabInstance: {fileID: 511887393469740671}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1910347444
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4912,6 +4900,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d3ec9b07002196647948abffca756f79, type: 3}
+--- !u!114 &511887393469740672 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 317194548293444456, guid: d3ec9b07002196647948abffca756f79,
+    type: 3}
+  m_PrefabInstance: {fileID: 511887393469740671}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1103361589130015989
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5009,12 +5009,12 @@ PrefabInstance:
         type: 3}
       propertyPath: enableResetButton
       value: 
-      objectReference: {fileID: 29768577}
+      objectReference: {fileID: 0}
     - target: {fileID: 1127496565384994972, guid: 61da5fbdada7732458a7a798cc2d0521,
         type: 3}
       propertyPath: enableResumButton
       value: 
-      objectReference: {fileID: 1905371453}
+      objectReference: {fileID: 0}
     - target: {fileID: 1127496565384994974, guid: 61da5fbdada7732458a7a798cc2d0521,
         type: 3}
       propertyPath: m_Name
