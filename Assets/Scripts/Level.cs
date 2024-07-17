@@ -8,7 +8,7 @@ public class Level : MonoBehaviour
     [SerializeField] int breakableBlocks;
 
   //  public Text textAd;
-    public GameObject enableCanvas;
+    //public GameObject enableCanvas;
   //  private AdManager adInstance;
 
     private void Start()
@@ -27,7 +27,7 @@ public class Level : MonoBehaviour
         breakableBlocks--;
         if(breakableBlocks <= 0)
         {
-            enableCanvas.SetActive(true);
+            //enableCanvas.SetActive(true);
             Ball.hasStarted = false;
             Ball.enableInput = false;
             
@@ -44,7 +44,7 @@ public class Level : MonoBehaviour
         //    textAd.text = "Hold on: " + t;            
             yield return new WaitForSeconds(1);
         }
-        enableCanvas.SetActive(false);        
+        //enableCanvas.SetActive(false);        
        // adInstance.DisplayAdNow();
         Ball.enableInput = true;
         SceneLoader.Instance.LoadNextScene();

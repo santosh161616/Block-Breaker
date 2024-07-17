@@ -24,12 +24,12 @@ public class SceneLoader : MonoBehaviour
     }
     public void ScoreReset()
     {
-        GameSession.instance.ResetHighScore();
+        GameSession.Instance.ResetHighScore();
     }
     public void LoadStartScean()
     {        
         SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
-        GameSession.instance.GameOver();
+        GameSession.Instance.GameOver();
     }
 
     public void QuitGame()

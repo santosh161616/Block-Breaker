@@ -22,41 +22,43 @@ public class GameSession : MonoBehaviour
     public TMP_Text adLoadTimer;
 
     //State variables.
-    public static GameSession instance;
 
-    RewardedAds adsInstance;
+    //RewardedAds adsInstance;
     public GameObject enableResume;
     public GameObject tryAgain;
 
+    private static GameSession instance;
+    public static GameSession Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = FindObjectOfType<GameSession>();
+            }
+            return instance;
+        }
+        set { instance = value; }
+    }
     private void Awake()
     {
-        if (instance == null)
+        if (Instance == null)
         {
             instance = this;
         }
-        else
+        else if (instance != this)
         {
             Destroy(gameObject);
         }
-
-        int gameStatusCount = FindObjectsOfType<GameSession>().Length;
-        if (gameStatusCount > 1)
-        {
-            gameObject.SetActive(false);
-            Destroy(gameObject);
-        }
-        else
-        {
-            DontDestroyOnLoad(gameObject);
-        }
+        DontDestroyOnLoad(gameObject);
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        highScoreText.text = PlayerPrefs.GetInt("HighScore").ToString();
+        highScoreText.text = PlayerPrefs.GetInt(StaticUrlScript.highScore).ToString();
         displayLevel.text = "Level: " + PlayerPrefs.GetInt("CurrentLevel").ToString();
-        adsInstance = FindObjectOfType<RewardedAds>();
+        //adsInstance = FindObjectOfType<RewardedAds>();
     }
 
     // Update is called once per frame
@@ -92,8 +94,8 @@ public class GameSession : MonoBehaviour
     {
         if (LoseCollider.checkResumeEligiblity)
         {
-            Ball.instance.StartCoroutine(AdLoadTimer());
-            adsInstance.ShowAd();
+            //Ball.instance.StartCoroutine(AdLoadTimer());
+            //adsInstance.ShowAd();
             LoseCollider.checkResumeEligiblity = false;
         }
     }
@@ -108,9 +110,9 @@ public class GameSession : MonoBehaviour
     {
         currentScore += pointPerBlockDestroyed;
         currentScoreText.text = currentScore.ToString();
-        if (currentScore > PlayerPrefs.GetInt("HighScore"))
+        if (currentScore > PlayerPrefs.GetInt(StaticUrlScript.highScore))
         {
-            PlayerPrefs.SetInt("HighScore", currentScore);
+            PlayerPrefs.SetInt(StaticUrlScript.highScore, currentScore);
         }
 
         //        scoreText.text = currentScore.ToString();
@@ -118,7 +120,7 @@ public class GameSession : MonoBehaviour
 
     public void ResetHighScore()
     {
-        PlayerPrefs.DeleteKey("HighScore");
+        PlayerPrefs.DeleteKey(StaticUrlScript.highScore);
         highScoreText.text = "0";
     }
 

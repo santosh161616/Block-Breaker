@@ -12,8 +12,8 @@ public class LoseCollider : MonoBehaviour
     {
         if (checkResumeEligiblity)
         {
-            GameSession.instance.enableResume.SetActive(true);
-            GameSession.instance.tryAgain.SetActive(true);
+            GameSession.Instance.enableResume.SetActive(true);
+            GameSession.Instance.tryAgain.SetActive(true);
 
             Ball.instance.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
         }
