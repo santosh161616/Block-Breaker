@@ -48,10 +48,9 @@ public class Paddle : MonoBehaviour
         }
     }
 
-    public bool isAutoPlayEnabled = false;
     public float GetXpos()
     {
-        if (/*GameSession.Instance.IsAutoPlayEnabled()*/ isAutoPlayEnabled)
+        if (GameSession.Instance.IsAutoPlayEnabled())
         {
             return FindObjectOfType<Ball>().transform.position.x;
         }
