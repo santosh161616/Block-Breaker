@@ -1,19 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 public class SceneLoader : MonoBehaviour
 {
     private int currentLevel;
     public static SceneLoader Instance;
-    private void Start()
+    private async void Start()
     {
         if (Instance == null)
         {
             Instance = this;
         }
         currentLevel = PlayerPrefs.GetInt(StaticUrlScript.currentLevel);
-        // SceneManager.LoadScene(0);
+        ///<summary>
+        ///Making Event firing wait so Level can be updated.
+        ///</summary>
+        await Task.Delay(500);
+        GameSession.Instance.LevelUpdateEvent.Invoke();
     }
     public void LoadNextScene()
     {
@@ -21,6 +26,7 @@ public class SceneLoader : MonoBehaviour
         SceneManager.LoadScene(currentSceneIndex + 1);
         currentLevel = currentSceneIndex + 1;
         PlayerPrefs.SetInt(StaticUrlScript.currentLevel, currentLevel);
+        GameSession.Instance.LevelUpdateEvent.Invoke();
     }
 
     public void LoadCurrentLevel()
@@ -34,7 +40,7 @@ public class SceneLoader : MonoBehaviour
     public void LoadStartScean()
     {
         SceneManager.LoadScene(PlayerPrefs.GetInt(StaticUrlScript.currentLevel));
-        GameSession.Instance.GameOver();
+        //GameSession.Instance.GameOver();
     }
 
     public void QuitGame()

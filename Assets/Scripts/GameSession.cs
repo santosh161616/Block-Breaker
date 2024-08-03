@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using System;
+using UnityEngine.Events;
 
 public class GameSession : MonoBehaviour
 {
@@ -11,6 +13,7 @@ public class GameSession : MonoBehaviour
     [SerializeField] int pointPerBlockDestroyed = 10;
     [SerializeField] TextMeshProUGUI currentScoreText;
     [SerializeField] TextMeshProUGUI highScoreText;
+
     [SerializeField] TextMeshProUGUI displayLevel;
     [SerializeField] bool isAutoPlayEnabled;
 
@@ -21,12 +24,12 @@ public class GameSession : MonoBehaviour
     private bool isPaused = false;
     public TMP_Text adLoadTimer;
 
-    //State variables.
+    [SerializeField] private Button _retryBtn, _resumeBtn, _pauseBtn;
 
     //RewardedAds adsInstance;
-    public GameObject enableResume;
-    public GameObject tryAgain;
+    [SerializeField] public GameObject gameOverPanel;
 
+    public UnityEvent LevelUpdateEvent;
     private static GameSession instance;
     public static GameSession Instance
     {
@@ -57,10 +60,24 @@ public class GameSession : MonoBehaviour
     void Start()
     {
         highScoreText.text = PlayerPrefs.GetInt(StaticUrlScript.highScore).ToString();
-        displayLevel.text = "Level: " + PlayerPrefs.GetInt("CurrentLevel").ToString();
+
         //adsInstance = FindObjectOfType<RewardedAds>();
+        LevelUpdateEvent.AddListener(LevelUpdate);
+        AddingListeners();
+
     }
 
+    void AddingListeners()
+    {
+        _retryBtn.onClick.RemoveAllListeners();
+        _retryBtn.onClick.AddListener(() => { ResetGameLevel(); });
+
+        _resumeBtn.onClick.RemoveAllListeners();
+        _resumeBtn.onClick.AddListener(() => { ResumeGame(); });
+
+        _pauseBtn.onClick.RemoveAllListeners();
+        _pauseBtn.onClick.AddListener(() => { PauseGame(); });
+    }
     // Update is called once per frame
     void Update()
     {
@@ -90,10 +107,16 @@ public class GameSession : MonoBehaviour
         //  enableButton.SetActive(true);
     }
 
+    private void LevelUpdate()
+    {
+        displayLevel.text = "Level: " + PlayerPrefs.GetInt(StaticUrlScript.currentLevel).ToString();
+    }
     public void ResumeGame()
     {
+        gameOverPanel?.SetActive(false);
         if (LoseCollider.checkResumeEligiblity)
         {
+            Utility.myLog("Resume Game");
             //Ball.instance.StartCoroutine(AdLoadTimer());
             //adsInstance.ShowAd();
             LoseCollider.checkResumeEligiblity = false;
@@ -102,6 +125,8 @@ public class GameSession : MonoBehaviour
 
     public void ResetGameLevel()
     {
+        Utility.myLog("Game Level  Resetted!");
+        gameOverPanel?.SetActive(false);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         LoseCollider.checkResumeEligiblity = true;
         Ball.hasStarted = false;
@@ -146,5 +171,10 @@ public class GameSession : MonoBehaviour
     public bool IsAutoPlayEnabled()
     {
         return isAutoPlayEnabled;
+    }
+
+    public void EnableGameOverPnl()
+    {
+        gameOverPanel?.SetActive(true);
     }
 }

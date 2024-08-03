@@ -30,8 +30,9 @@ public class Level : MonoBehaviour
             //enableCanvas.SetActive(true);
             Ball.hasStarted = false;
             Ball.enableInput = false;
-            
-            StartCoroutine(LoadingCount());            
+
+            //StartCoroutine(LoadingCount());    //Added it to show Ad.        
+            SceneLoader.Instance.LoadNextScene();
         }
     }   
     
