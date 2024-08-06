@@ -6,6 +6,9 @@ using TMPro;
 using UnityEngine.SceneManagement;
 using System;
 using UnityEngine.Events;
+using Firebase.Extensions;
+using Firebase;
+using Firebase.Analytics;
 
 public class GameSession : MonoBehaviour
 {
@@ -28,6 +31,7 @@ public class GameSession : MonoBehaviour
 
     //RewardedAds adsInstance;
     [SerializeField] public GameObject gameOverPanel;
+    private FirebaseApp app;
 
     public UnityEvent LevelUpdateEvent;
     private static GameSession instance;
@@ -59,11 +63,42 @@ public class GameSession : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        InitFirebase();
         highScoreText.text = PlayerPrefs.GetInt(StaticUrlScript.highScore).ToString();
 
         //adsInstance = FindObjectOfType<RewardedAds>();
         LevelUpdateEvent.AddListener(LevelUpdate);
         AddingListeners();
+
+        /// <summary>
+        /// Firebase Start Game Event
+        /// </summary>
+        Firebase.Analytics.FirebaseAnalytics.LogEvent(StaticUrlScript.StartGame_Firebase);
+    }
+
+    /// <summary>
+    /// Init Firebase 
+    /// </summary>
+    void InitFirebase()
+    {
+        Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
+        {
+            var dependencyStatus = task.Result;
+            if (dependencyStatus == Firebase.DependencyStatus.Available)
+            {
+                // Create and hold a reference to your FirebaseApp,
+                // where app is a Firebase.FirebaseApp property of your application class.
+                app = Firebase.FirebaseApp.DefaultInstance;
+
+                // Set a flag here to indicate whether Firebase is ready to use by your app.
+            }
+            else
+            {
+                UnityEngine.Debug.LogError(System.String.Format(
+                  "Could not resolve all Firebase dependencies: {0}", dependencyStatus));
+                // Firebase Unity SDK is not safe to use here.
+            }
+        });
 
     }
 
@@ -107,10 +142,17 @@ public class GameSession : MonoBehaviour
         //  enableButton.SetActive(true);
     }
 
+    /// <summary>
+    /// Updating Level counter on every time LevelUpdateEvent Fires
+    /// </summary>
     private void LevelUpdate()
     {
         displayLevel.text = "Level: " + PlayerPrefs.GetInt(StaticUrlScript.currentLevel).ToString();
     }
+
+    /// <summary>
+    /// Simple Resume Game if user is died b/w game.
+    /// </summary>
     public void ResumeGame()
     {
         gameOverPanel?.SetActive(false);
@@ -123,6 +165,9 @@ public class GameSession : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Reset Game level.
+    /// </summary>
     public void ResetGameLevel()
     {
         Utility.myLog("Game Level  Resetted!");
@@ -131,6 +176,10 @@ public class GameSession : MonoBehaviour
         LoseCollider.checkResumeEligiblity = true;
         Ball.hasStarted = false;
     }
+
+    /// <summary>
+    /// Calculating Game Score
+    /// </summary>
     public void AddToScore()
     {
         currentScore += pointPerBlockDestroyed;
@@ -143,12 +192,18 @@ public class GameSession : MonoBehaviour
         //        scoreText.text = currentScore.ToString();
     }
 
+    /// <summary>
+    /// Deletes the highScore playerprefs.
+    /// </summary>
     public void ResetHighScore()
     {
         PlayerPrefs.DeleteKey(StaticUrlScript.highScore);
         highScoreText.text = "0";
     }
 
+    /// <summary>
+    /// Simple pause game and change Sprites
+    /// </summary>
     public void PauseGame()
     {
         if (isPaused)

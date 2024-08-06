@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "807857650392",
+    "project_id": "badsanto-games",
+    "storage_bucket": "badsanto-games.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:807857650392:android:f1d9cedd2b2eb7733e35ad",
+        "android_client_info": {
+          "package_name": "com.Brick.Bouncer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpHybvw1SM7setSDUAUzZ3MVftwB-gczA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

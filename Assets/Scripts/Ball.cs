@@ -43,6 +43,11 @@ public class Ball : MonoBehaviour
         {
             LockBallToPaddle();
         }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            LaunchOnMouseClick();
+        }
     }
 
     public void LaunchOnMouseClick()
