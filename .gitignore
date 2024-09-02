@@ -10,6 +10,15 @@
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
 
+# Firebase-related files (general pattern)
+firebase-analytics-unity/*.meta
+firebase-analytics-unity-*.aar.meta
+firebase-analytics-unity-*.pom
+firebase-analytics-unity-*.pom.meta
+firebase-app-unity-*.pom
+
+
+
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
