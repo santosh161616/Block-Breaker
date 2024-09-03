@@ -1,20 +1,62 @@
+using System;
 using UnityEngine;
 using UnityEngine.Advertisements;
 using UnityEngine.UI;
 
-public class AdManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowListener
+public class AdManager : MonoBehaviour, IUnityAdsInitializationListener, IUnityAdsLoadListener, IUnityAdsShowListener
 {
+    [SerializeField] string _androidGameId;
+    [SerializeField] string _iOSGameId;
+    [SerializeField] bool _testMode = true;
+    private string _gameId;
+
     [SerializeField] string _androidAdUnitId = "Interstitial_Android";
     [SerializeField] string _iOsAdUnitId = "Interstitial_iOS";
     string _adUnitId;
 
     void Awake()
     {
-        // Get the Ad Unit ID for the current platform:
-        _adUnitId = (Application.platform == RuntimePlatform.IPhonePlayer)
-            ? _iOsAdUnitId
-            : _androidAdUnitId;
+        InitializeAds(() => {
+
+            // Code after Untity SDK initilized
+            // Get the Ad Unit ID for the current platform:
+            _adUnitId = (Application.platform == RuntimePlatform.IPhonePlayer)
+                ? _iOsAdUnitId
+                : _androidAdUnitId;
+        });
+
+        
     }
+
+    #region Init UnitySDK
+    public void InitializeAds(Action onInitilizationCompleteEvent)
+    {
+#if UNITY_IOS
+            _gameId = _iOSGameId;
+#elif UNITY_ANDROID
+        _gameId = _androidGameId;
+#elif UNITY_EDITOR
+            _gameId = _androidGameId; //Only for testing the functionality in the Editor
+#endif
+        if (!Advertisement.isInitialized && Advertisement.isSupported)
+        {
+            Advertisement.Initialize(_gameId, _testMode, this);
+            onInitilizationCompleteEvent.Invoke();
+        }
+    }
+
+
+    public void OnInitializationComplete()
+    {
+        Debug.Log("Unity Ads initialization complete.");        
+    }
+
+    public void OnInitializationFailed(UnityAdsInitializationError error, string message)
+    {
+        Debug.Log($"Unity Ads Initialization Failed: {error.ToString()} - {message}");
+    }
+
+    #endregion
 
     // Load content to the Ad Unit:
     public void LoadAd()
