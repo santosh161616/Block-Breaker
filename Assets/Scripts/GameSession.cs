@@ -73,7 +73,7 @@ public class GameSession : MonoBehaviour
         /// <summary>
         /// Firebase Start Game Event
         /// </summary>
-        Firebase.Analytics.FirebaseAnalytics.LogEvent(StaticUrlScript.StartGame_Firebase);
+        FirebaseAnalytics.LogEvent(StaticUrlScript.StartGame_Firebase);        
     }
 
     /// <summary>

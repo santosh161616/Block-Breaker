@@ -1930,7 +1930,7 @@ GameObject:
   - component: {fileID: 1332729113}
   - component: {fileID: 1332729114}
   m_Layer: 0
-  m_Name: SDKInitilize
+  m_Name: AdsController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1960,12 +1960,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 1332729112}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14eeacfd78e3f5b47a93f83126c144e7, type: 3}
+  m_Script: {fileID: 11500000, guid: a77600db88c91d846a8453d2f892bf53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _androidGameId: 4386735
-  _iOSGameId: 4386734
   _testMode: 1
+  _androidAdUnitId: Interstitial_Android
+  OnInterstitialAdFailedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnInterstitialAdClosedEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1439595626
 GameObject:
   m_ObjectHideFlags: 0

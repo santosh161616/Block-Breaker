@@ -1,38 +1,56 @@
 using System;
 using UnityEngine;
 using UnityEngine.Advertisements;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class AdManager : MonoBehaviour, IUnityAdsInitializationListener, IUnityAdsLoadListener, IUnityAdsShowListener
 {
     [SerializeField] string _androidGameId;
-    [SerializeField] string _iOSGameId;
     [SerializeField] bool _testMode = true;
     private string _gameId;
 
     [SerializeField] string _androidAdUnitId = "Interstitial_Android";
-    [SerializeField] string _iOsAdUnitId = "Interstitial_iOS";
     string _adUnitId;
+
+    #region SingleTon
+    private static AdManager _instance;
+    public static AdManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<AdManager>();
+            }
+            return _instance;
+        }
+        set
+        {
+            _instance = value;
+        }
+    }
+
 
     void Awake()
     {
-        InitializeAds(() => {
-
-            // Code after Untity SDK initilized
-            // Get the Ad Unit ID for the current platform:
-            _adUnitId = (Application.platform == RuntimePlatform.IPhonePlayer)
-                ? _iOsAdUnitId
-                : _androidAdUnitId;
-        });
-
-        
+        if (Instance == null)
+        {
+            _instance = this;
+        }
+        else if (_instance != this)
+        {
+            Destroy(gameObject);
+        }
+        DontDestroyOnLoad(gameObject);
     }
+    #endregion
 
     #region Init UnitySDK
-    public void InitializeAds(Action onInitilizationCompleteEvent)
+    public void InitializeAds()
     {
 #if UNITY_IOS
-            _gameId = _iOSGameId;
+            //_gameId = _iOSGameId;
 #elif UNITY_ANDROID
         _gameId = _androidGameId;
 #elif UNITY_EDITOR
@@ -41,14 +59,20 @@ public class AdManager : MonoBehaviour, IUnityAdsInitializationListener, IUnityA
         if (!Advertisement.isInitialized && Advertisement.isSupported)
         {
             Advertisement.Initialize(_gameId, _testMode, this);
-            onInitilizationCompleteEvent.Invoke();
+
         }
     }
-
+    private void Start()
+    {
+        _adUnitId = _androidAdUnitId;
+        _onInitilizationCompleteEvent = LoadAd;
+        InitializeAds();
+    }
 
     public void OnInitializationComplete()
     {
-        Debug.Log("Unity Ads initialization complete.");        
+        Debug.Log("Unity Ads initialization complete.");
+        _onInitilizationCompleteEvent.Invoke();
     }
 
     public void OnInitializationFailed(UnityAdsInitializationError error, string message)
@@ -57,6 +81,11 @@ public class AdManager : MonoBehaviour, IUnityAdsInitializationListener, IUnityA
     }
 
     #endregion
+
+    public UnityEvent OnInterstitialAdFailedEvent = new UnityEvent();
+    public UnityEvent OnInterstitialAdClosedEvent = new UnityEvent();
+    public Action _onInitilizationCompleteEvent;
+
 
     // Load content to the Ad Unit:
     public void LoadAd()
@@ -89,10 +118,11 @@ public class AdManager : MonoBehaviour, IUnityAdsInitializationListener, IUnityA
     public void OnUnityAdsShowFailure(string _adUnitId, UnityAdsShowError error, string message)
     {
         Debug.Log($"Error showing Ad Unit {_adUnitId}: {error.ToString()} - {message}");
+        OnInterstitialAdFailedEvent.Invoke();
         // Optionally execute code if the Ad Unit fails to show, such as loading another ad.
     }
 
     public void OnUnityAdsShowStart(string _adUnitId) { }
     public void OnUnityAdsShowClick(string _adUnitId) { }
-    public void OnUnityAdsShowComplete(string _adUnitId, UnityAdsShowCompletionState showCompletionState) { }
+    public void OnUnityAdsShowComplete(string _adUnitId, UnityAdsShowCompletionState showCompletionState) { OnInterstitialAdClosedEvent.Invoke(); }
 }
