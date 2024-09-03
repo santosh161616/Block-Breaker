@@ -119,10 +119,15 @@ public class AdManager : MonoBehaviour, IUnityAdsInitializationListener, IUnityA
     {
         Debug.Log($"Error showing Ad Unit {_adUnitId}: {error.ToString()} - {message}");
         OnInterstitialAdFailedEvent.Invoke();
+        LoadAd();
         // Optionally execute code if the Ad Unit fails to show, such as loading another ad.
     }
 
     public void OnUnityAdsShowStart(string _adUnitId) { }
     public void OnUnityAdsShowClick(string _adUnitId) { }
-    public void OnUnityAdsShowComplete(string _adUnitId, UnityAdsShowCompletionState showCompletionState) { OnInterstitialAdClosedEvent.Invoke(); }
+    public void OnUnityAdsShowComplete(string _adUnitId, UnityAdsShowCompletionState showCompletionState)
+    {
+        OnInterstitialAdClosedEvent.Invoke();
+        LoadAd();
+    }
 }
