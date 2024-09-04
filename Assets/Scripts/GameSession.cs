@@ -33,7 +33,8 @@ public class GameSession : MonoBehaviour
     [SerializeField] public GameObject gameOverPanel;
     private FirebaseApp app;
 
-    public UnityEvent LevelUpdateEvent;
+
+    #region Unity Singleton
     private static GameSession instance;
     public static GameSession Instance
     {
@@ -59,17 +60,25 @@ public class GameSession : MonoBehaviour
         }
         DontDestroyOnLoad(gameObject);
     }
+    #endregion
 
+    #region Unity & Action Events
+    public UnityEvent LevelUpdateEvent;
+    public Action StartGameAction;
+    private void OnEnable()
+    {
+        StartGameAction += InitFirebase;
+        StartGameAction += AddingListeners;
+    }
+    #endregion
     // Start is called before the first frame update
     void Start()
     {
-        InitFirebase();
+        StartGameAction.Invoke();
+
         highScoreText.text = PlayerPrefs.GetInt(StaticUrlScript.highScore).ToString();
-
-        //adsInstance = FindObjectOfType<RewardedAds>();
         LevelUpdateEvent.AddListener(LevelUpdate);
-        AddingListeners();
-
+        
         /// <summary>
         /// Firebase Start Game Event
         /// </summary>
@@ -127,21 +136,6 @@ public class GameSession : MonoBehaviour
 
     }
 
-    IEnumerator AdLoadTimer()
-    {
-        int t = 3;
-        while (t > 0)
-        {
-            t--;
-            adLoadTimer.text = t.ToString();
-            yield return new WaitForSeconds(1);
-        }
-
-        Ball.hasStarted = false;
-        // rewarded.ShowAd();
-        //  enableButton.SetActive(true);
-    }
-
     /// <summary>
     /// Updating Level counter on every time LevelUpdateEvent Fires
     /// </summary>
@@ -159,8 +153,6 @@ public class GameSession : MonoBehaviour
         if (LoseCollider.checkResumeEligiblity)
         {
             Utility.myLog("Resume Game");
-            //Ball.instance.StartCoroutine(AdLoadTimer());
-            //adsInstance.ShowAd();
             LoseCollider.checkResumeEligiblity = false;
         }
     }
@@ -231,5 +223,11 @@ public class GameSession : MonoBehaviour
     public void EnableGameOverPnl()
     {
         gameOverPanel?.SetActive(true);
+    }
+
+    private void OnDisable()
+    {
+        StartGameAction -= InitFirebase;
+        StartGameAction -= AddingListeners;
     }
 }
