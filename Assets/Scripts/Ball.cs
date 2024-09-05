@@ -14,7 +14,7 @@ public class Ball : MonoBehaviour
 
     //State
     Vector2 paddleToBallVector;
-    public static bool hasStarted = false;
+    public bool hasStarted = false;
     public static bool enableInput = true;
     public static bool enableResume = true;
 

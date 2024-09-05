@@ -1,3 +1,5 @@
+using Firebase;
+using Firebase.Extensions;
 using System;
 using UnityEngine;
 using UnityEngine.Advertisements;
@@ -12,6 +14,7 @@ public class AdManager : MonoBehaviour, IUnityAdsInitializationListener, IUnityA
 
     [SerializeField] string _androidAdUnitId = "Interstitial_Android";
     string _adUnitId;
+
 
     #region SingleTon
     private static AdManager _instance;
@@ -68,7 +71,7 @@ public class AdManager : MonoBehaviour, IUnityAdsInitializationListener, IUnityA
         _onInitilizationCompleteEvent = LoadAd;
         InitializeAds();
     }
-
+    
     public void OnInitializationComplete()
     {
         Debug.Log("Unity Ads initialization complete.");

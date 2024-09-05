@@ -28,7 +28,7 @@ public class Level : MonoBehaviour
         if(breakableBlocks <= 0)
         {
             //enableCanvas.SetActive(true);
-            Ball.hasStarted = false;
+            Ball.instance.hasStarted = false;
             Ball.enableInput = false;
 
             //StartCoroutine(LoadingCount());    //Added it to show Ad.        
