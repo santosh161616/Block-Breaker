@@ -15,7 +15,7 @@ public class Ball : MonoBehaviour
     //State
     Vector2 paddleToBallVector;
     public bool hasStarted = false;
-    public static bool enableInput = true;
+    public bool enableInput = true;
     public static bool enableResume = true;
 
     //Cache component reference.
