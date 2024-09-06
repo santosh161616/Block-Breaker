@@ -49,7 +49,7 @@ public class FillInTime : MonoBehaviour
         if (Application.internetReachability == NetworkReachability.NotReachable)
         {
             Utility.myError("Internet NOT CONNECTED---- >");
-            LoaderManager.instance?.OpenRetryPanel(() => LoadSpinScene());
+            LoaderManager.Instance?.OpenRetryPanel(() => LoadSpinScene());
         }       
     }
 }
