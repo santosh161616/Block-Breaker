@@ -203,6 +203,7 @@ public class GameSession : MonoBehaviour
     {
         PlayerPrefs.DeleteKey(StaticUrlScript.highScore);
         highScoreText.text = "0";
+        PlayerPrefs.Save();
     }
 
     /// <summary>

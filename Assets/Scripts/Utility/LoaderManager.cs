@@ -1,3 +1,4 @@
+using Coffee.UIExtensions;
 using DG.Tweening;
 using System.Collections;
 using TMPro;
@@ -10,6 +11,7 @@ public class LoaderManager : MonoBehaviour
 {
     public GameObject GameStartLoader;
     public Slider StartGameSlider;
+    public ShinyEffectForUGUI imageEffectUI;
     public GameObject LoaderObject, confirmationPanel, RetryPanel, noAdsPanel;
     public TMP_Text headingTxt, subHeadingTxt, btnText, infoTxt;
     public Image headerImage, RetryImage, GameLogo;
@@ -60,6 +62,7 @@ public class LoaderManager : MonoBehaviour
         //RandomColor();
         GameStartLoader?.SetActive(true);
         GameLogo.transform.DOScale(1.5f, 5f);
+        imageEffectUI.Play(5f);
         StartCoroutine(Loading());
         StartGameSlider.DOValue(1f, 5f).SetEase(DG.Tweening.Ease.Linear).OnComplete(() =>
         {

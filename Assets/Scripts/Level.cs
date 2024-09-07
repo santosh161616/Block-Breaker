@@ -32,6 +32,7 @@ public class Level : MonoBehaviour
             Ball.instance.enableInput = false;
 
             //StartCoroutine(LoadingCount());    //Added it to show Ad.        
+            LoaderManager.Instance.EnableLoader();
             SceneLoader.Instance.LoadNextScene();
         }
     }   
