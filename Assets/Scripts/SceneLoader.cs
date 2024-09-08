@@ -40,12 +40,5 @@ public class SceneLoader : MonoBehaviour
     public void LoadStartScean()
     {
         SceneManager.LoadScene(PlayerPrefs.GetInt(StaticUrlScript.currentLevel));
-        //GameSession.Instance.GameOver();
     }
-
-    public void QuitGame()
-    {
-        Application.Quit();
-    }
-
 }

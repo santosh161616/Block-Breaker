@@ -28,10 +28,11 @@ public class Level : MonoBehaviour
         if(breakableBlocks <= 0)
         {
             //enableCanvas.SetActive(true);
-            Ball.hasStarted = false;
-            Ball.enableInput = false;
+            Ball.instance.hasStarted = false;
+            Ball.instance.enableInput = false;
 
             //StartCoroutine(LoadingCount());    //Added it to show Ad.        
+            LoaderManager.Instance.EnableLoader();
             SceneLoader.Instance.LoadNextScene();
         }
     }   
@@ -46,8 +47,8 @@ public class Level : MonoBehaviour
             yield return new WaitForSeconds(1);
         }
         //enableCanvas.SetActive(false);        
-       // adInstance.DisplayAdNow();
-        Ball.enableInput = true;
+        // adInstance.DisplayAdNow();
+        Ball.instance.enableInput = true;
         SceneLoader.Instance.LoadNextScene();
     }
 }

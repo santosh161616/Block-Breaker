@@ -14,8 +14,8 @@ public class Ball : MonoBehaviour
 
     //State
     Vector2 paddleToBallVector;
-    public static bool hasStarted = false;
-    public static bool enableInput = true;
+    public bool hasStarted = false;
+    public bool enableInput = true;
     public static bool enableResume = true;
 
     //Cache component reference.
@@ -75,11 +75,11 @@ public class Ball : MonoBehaviour
             myAudioSource.PlayOneShot(clip);
 
             myRigidBody2D.velocity = myRigidBody2D.velocity.normalized * 7f;
-            Debug.Log(myRigidBody2D.velocity.normalized + "Before Tweak" + velocityTweak);
+            //Debug.Log(myRigidBody2D.velocity.normalized + "Before Tweak" + velocityTweak);
 
             myRigidBody2D.velocity += velocityTweak;
 
-            Debug.Log(myRigidBody2D.velocity + "Velocity Tweak" + velocityTweak);
+            //Debug.Log(myRigidBody2D.velocity + "Velocity Tweak" + velocityTweak);
         }
 
     }

@@ -1,3 +1,4 @@
+using Coffee.UIExtensions;
 using DG.Tweening;
 using System.Collections;
 using TMPro;
@@ -8,16 +9,18 @@ using UnityEngine.UI;
 
 public class LoaderManager : MonoBehaviour
 {
-    public static LoaderManager instance;
     public GameObject GameStartLoader;
     public Slider StartGameSlider;
+    public ShinyEffectForUGUI imageEffectUI;
     public GameObject LoaderObject, confirmationPanel, RetryPanel, noAdsPanel;
     public TMP_Text headingTxt, subHeadingTxt, btnText, infoTxt;
-    public Image headerImage, RetryImage;
+    public Image headerImage, RetryImage, GameLogo;
     public Button RetryButton, buyBtn;
     public TMP_Text RetryTextHeading, RetryText;
     [SerializeField] private TextMeshProUGUI loadingTxt, RetryButtonText;
 
+    #region Unity SingleTon
+    private static LoaderManager instance;
     public static LoaderManager Instance
     {
         get
@@ -25,11 +28,18 @@ public class LoaderManager : MonoBehaviour
             if (instance == null)
             {
                 instance = FindObjectOfType<LoaderManager>();
+
+                // If no LoaderManager is found, you can optionally log an error or instantiate it here
+                if (instance == null)
+                {
+                    Debug.LogError("No LoaderManager instance found in the scene.");
+                }
             }
             return instance;
         }
-        set { instance = value; }
+        private set { instance = value; } // Setter is private to avoid external modification
     }
+
     private void Awake()
     {
         if (Instance == null)
@@ -38,16 +48,21 @@ public class LoaderManager : MonoBehaviour
         }
         else if (instance != this)
         {
-            Destroy(gameObject);
+            Destroy(gameObject); // Destroy this instance if it’s not the singleton
+            return; // Ensure we don't call DontDestroyOnLoad on this duplicate instance
         }
-        DontDestroyOnLoad(gameObject);
-        LoaderObject.gameObject.SetActive(false);
+
+        DontDestroyOnLoad(gameObject); // Persist this instance across scenes
+        LoaderObject.gameObject.SetActive(false); // Assuming LoaderObject is defined elsewhere
     }
+    #endregion
 
     private void Start()
     {
-        RandomColor();
+        //RandomColor();
         GameStartLoader?.SetActive(true);
+        GameLogo.transform.DOScale(1.5f, 5f);
+        imageEffectUI.Play(5f);
         StartCoroutine(Loading());
         StartGameSlider.DOValue(1f, 5f).SetEase(DG.Tweening.Ease.Linear).OnComplete(() =>
         {
@@ -78,7 +93,7 @@ public class LoaderManager : MonoBehaviour
             loadingText.text = "LOADING..";
             yield return delay;
 
-            loadingText.text = "LOADING...";
+            loadingText.text = "LOADING ...";
             yield return delay;
         }
     }

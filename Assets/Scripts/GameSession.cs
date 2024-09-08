@@ -31,9 +31,10 @@ public class GameSession : MonoBehaviour
 
     //RewardedAds adsInstance;
     [SerializeField] public GameObject gameOverPanel;
-    private FirebaseApp app;
 
-    public UnityEvent LevelUpdateEvent;
+    FirebaseApp app;
+
+    #region Unity Singleton
     private static GameSession instance;
     public static GameSession Instance
     {
@@ -59,26 +60,33 @@ public class GameSession : MonoBehaviour
         }
         DontDestroyOnLoad(gameObject);
     }
+    #endregion
 
+    #region Unity & Action Events
+    public UnityEvent LevelUpdateEvent;
+
+    public Action StartGameAction;
+    #endregion
+
+    private void OnEnable()
+    {
+        StartGameAction += InitFirebase;
+        StartGameAction += AddingListeners;
+    }
     // Start is called before the first frame update
     void Start()
     {
-        InitFirebase();
+        StartGameAction?.Invoke();
+        
         highScoreText.text = PlayerPrefs.GetInt(StaticUrlScript.highScore).ToString();
-
-        //adsInstance = FindObjectOfType<RewardedAds>();
         LevelUpdateEvent.AddListener(LevelUpdate);
-        AddingListeners();
 
         /// <summary>
         /// Firebase Start Game Event
         /// </summary>
-        Firebase.Analytics.FirebaseAnalytics.LogEvent(StaticUrlScript.StartGame_Firebase);
+        FirebaseAnalytics.LogEvent(StaticUrlScript.StartGame_Firebase);
     }
 
-    /// <summary>
-    /// Init Firebase 
-    /// </summary>
     void InitFirebase()
     {
         Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
@@ -101,17 +109,29 @@ public class GameSession : MonoBehaviour
         });
 
     }
-
     void AddingListeners()
     {
-        _retryBtn.onClick.RemoveAllListeners();
-        _retryBtn.onClick.AddListener(() => { ResetGameLevel(); });
 
-        _resumeBtn.onClick.RemoveAllListeners();
-        _resumeBtn.onClick.AddListener(() => { ResumeGame(); });
+        _retryBtn.onClick.AddListener(() =>
+        {
+            ResetGameLevel();
+            Utility.myLog("Retry button listener added");
+        });
 
-        _pauseBtn.onClick.RemoveAllListeners();
-        _pauseBtn.onClick.AddListener(() => { PauseGame(); });
+
+        _resumeBtn.onClick.AddListener(() =>
+        {
+            ResumeGame();
+        });
+
+
+        _pauseBtn.onClick.AddListener(() =>
+        {
+            PauseGame();
+        });
+
+        // Optional: Log to confirm listeners are being added
+        Debug.Log("Listeners have been added to buttons");
     }
     // Update is called once per frame
     void Update()
@@ -125,21 +145,6 @@ public class GameSession : MonoBehaviour
             Time.timeScale = 0f;
         }
 
-    }
-
-    IEnumerator AdLoadTimer()
-    {
-        int t = 3;
-        while (t > 0)
-        {
-            t--;
-            adLoadTimer.text = t.ToString();
-            yield return new WaitForSeconds(1);
-        }
-
-        Ball.hasStarted = false;
-        // rewarded.ShowAd();
-        //  enableButton.SetActive(true);
     }
 
     /// <summary>
@@ -156,11 +161,10 @@ public class GameSession : MonoBehaviour
     public void ResumeGame()
     {
         gameOverPanel?.SetActive(false);
+        Ball.instance.hasStarted = true;
         if (LoseCollider.checkResumeEligiblity)
         {
             Utility.myLog("Resume Game");
-            //Ball.instance.StartCoroutine(AdLoadTimer());
-            //adsInstance.ShowAd();
             LoseCollider.checkResumeEligiblity = false;
         }
     }
@@ -174,7 +178,7 @@ public class GameSession : MonoBehaviour
         gameOverPanel?.SetActive(false);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         LoseCollider.checkResumeEligiblity = true;
-        Ball.hasStarted = false;
+        Ball.instance.hasStarted = false;
     }
 
     /// <summary>
@@ -199,6 +203,7 @@ public class GameSession : MonoBehaviour
     {
         PlayerPrefs.DeleteKey(StaticUrlScript.highScore);
         highScoreText.text = "0";
+        PlayerPrefs.Save();
     }
 
     /// <summary>
@@ -218,11 +223,6 @@ public class GameSession : MonoBehaviour
         }
     }
 
-    public void GameOver()
-    {
-        Destroy(gameObject);
-    }
-
     public bool IsAutoPlayEnabled()
     {
         return isAutoPlayEnabled;
@@ -232,4 +232,11 @@ public class GameSession : MonoBehaviour
     {
         gameOverPanel?.SetActive(true);
     }
+
+    private void OnDisable()
+    {
+        StartGameAction -= AddingListeners;
+        StartGameAction -= InitFirebase;
+    }
+
 }
