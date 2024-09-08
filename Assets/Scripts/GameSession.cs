@@ -161,7 +161,7 @@ public class GameSession : MonoBehaviour
     public void ResumeGame()
     {
         gameOverPanel?.SetActive(false);
-        Ball.instance.hasStarted = true;
+        Ball.instance.HasStarted = false;
         if (LoseCollider.checkResumeEligiblity)
         {
             Utility.myLog("Resume Game");
@@ -178,7 +178,7 @@ public class GameSession : MonoBehaviour
         gameOverPanel?.SetActive(false);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         LoseCollider.checkResumeEligiblity = true;
-        Ball.instance.hasStarted = false;
+        Ball.instance.HasStarted = false;
     }
 
     /// <summary>

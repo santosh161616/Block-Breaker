@@ -21,7 +21,7 @@ public class LoseCollider : MonoBehaviour
         if(!Ball.enableResume)
         {
             SceneManager.LoadScene("03 Game Over");
-            Ball.instance.hasStarted = false;
+            Ball.instance.HasStarted = false;
         }                
     }
 }

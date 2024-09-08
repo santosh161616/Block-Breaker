@@ -7,16 +7,6 @@ public class Level : MonoBehaviour
 {
     [SerializeField] int breakableBlocks;
 
-  //  public Text textAd;
-    //public GameObject enableCanvas;
-  //  private AdManager adInstance;
-
-    private void Start()
-    {
-
-      //  adInstance = GetComponent<AdManager>();
-    }
-
     public void CountBlocks()
     {
         breakableBlocks++;
@@ -28,27 +18,11 @@ public class Level : MonoBehaviour
         if(breakableBlocks <= 0)
         {
             //enableCanvas.SetActive(true);
-            Ball.instance.hasStarted = false;
-            Ball.instance.enableInput = false;
+            Ball.instance.HasStarted = false;
+            Ball.instance.EnableInput = false;
 
             //StartCoroutine(LoadingCount());    //Added it to show Ad.        
-            LoaderManager.Instance.EnableLoader();
             SceneLoader.Instance.LoadNextScene();
         }
-    }   
-    
-    IEnumerator LoadingCount()
-    {
-        int t = 3;
-        while(t > 0)
-        {
-            t--;
-        //    textAd.text = "Hold on: " + t;            
-            yield return new WaitForSeconds(1);
-        }
-        //enableCanvas.SetActive(false);        
-        // adInstance.DisplayAdNow();
-        Ball.instance.enableInput = true;
-        SceneLoader.Instance.LoadNextScene();
-    }
+    }           
 }
