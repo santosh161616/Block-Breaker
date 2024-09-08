@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7404f3a747d08dc40b5a64172114235e, type: 3}
+  m_Name: wheelData
+  m_EditorClassIdentifier: 
+  spinWheelType: 3
+  resultCoinId: 1
+  spinWheelValues:
+  - Id: 1
+    Coins: 5
+    Icon: https://oneto11static.azureedge.net/socialpe/icons/emo-cry.png
+  - Id: 2
+    Coins: 3
+    Icon: https://oneto11static.azureedge.net/socialpe/icons/emo-cry.png
+  - Id: 3
+    Coins: 0
+    Icon: https://oneto11static.azureedge.net/socialpe/icons/emo-cry.png
+  - Id: 4
+    Coins: 1
+    Icon: https://oneto11static.azureedge.net/socialpe/icons/emo-cry.png
+  - Id: 5
+    Coins: 6
+    Icon: https://oneto11static.azureedge.net/socialpe/icons/emo-cry.png
+  - Id: 7
+    Coins: 1
+    Icon: https://oneto11static.azureedge.net/socialpe/icons/emo-cry.png
+  - Id: 8
+    Coins: 2
+    Icon: https://oneto11static.azureedge.net/socialpe/icons/emo-cry.png
+  - Id: 9
+    Coins: 5
+    Icon: https://oneto11static.azureedge.net/socialpe/icons/emo-cry.png
+  - Id: 10
+    Coins: 2
+    Icon: https://oneto11static.azureedge.net/socialpe/icons/emo-cry.png
+  - Id: 11
+    Coins: 0
+    Icon: https://oneto11static.azureedge.net/socialpe/icons/emo-cry.png
+  - Id: 12
+    Coins: 1
+    Icon: https://oneto11static.azureedge.net/socialpe/icons/emo-cry.png
+  - Id: 13
+    Coins: 3
+    Icon: https://oneto11static.azureedge.net/socialpe/icons/emo-cry.png
+  spinWheelId: 65f2c71b5f4dbf4fa6a918c3

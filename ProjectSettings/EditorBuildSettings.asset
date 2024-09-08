@@ -164,4 +164,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/03 Game Over.unity
     guid: 1f0f49a76c765e94494548f4768ed596
+  - enabled: 1
+    path: Assets/Scenes/SpinWheel.unity
+    guid: b2e31beeb460aec4d9d3f5b1576a9fe5
   m_configObjects: {}
