@@ -34,6 +34,7 @@ public class GameSession : MonoBehaviour
 
     FirebaseApp app;
 
+    private bool _isResumeValid = true;
     #region Unity Singleton
     private static GameSession instance;
     public static GameSession Instance
@@ -68,6 +69,7 @@ public class GameSession : MonoBehaviour
     public Action StartGameAction;
     #endregion
 
+    public bool IsResumeValid => _isResumeValid;
     private void OnEnable()
     {
         StartGameAction += InitFirebase;
@@ -77,7 +79,7 @@ public class GameSession : MonoBehaviour
     void Start()
     {
         StartGameAction?.Invoke();
-        
+
         highScoreText.text = PlayerPrefs.GetInt(StaticUrlScript.highScore).ToString();
         LevelUpdateEvent.AddListener(LevelUpdate);
 
@@ -160,12 +162,18 @@ public class GameSession : MonoBehaviour
     /// </summary>
     public void ResumeGame()
     {
-        gameOverPanel?.SetActive(false);
-        Ball.instance.HasStarted = false;
-        if (LoseCollider.checkResumeEligiblity)
+        if (Ball.instance == null)
         {
-            Utility.myLog("Resume Game");
-            LoseCollider.checkResumeEligiblity = false;
+            Debug.LogError("Ball.instance is null!");
+            return; // Exit if instance is not found
+        }
+
+        Ball.instance.HasStarted = false;
+        gameOverPanel?.SetActive(false);
+        Utility.myLog("Game Resume");
+        if (_isResumeValid)
+        {
+            _isResumeValid = false;
         }
     }
 
@@ -177,7 +185,7 @@ public class GameSession : MonoBehaviour
         Utility.myLog("Game Level  Resetted!");
         gameOverPanel?.SetActive(false);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        LoseCollider.checkResumeEligiblity = true;
+        _isResumeValid = true;
         Ball.instance.HasStarted = false;
     }
 
@@ -230,6 +238,11 @@ public class GameSession : MonoBehaviour
 
     public void EnableGameOverPnl()
     {
+        if (!_isResumeValid)
+        {
+            SceneManager.LoadSceneAsync(StaticUrlScript.GameOver);
+            return;
+        }
         gameOverPanel?.SetActive(true);
     }
 

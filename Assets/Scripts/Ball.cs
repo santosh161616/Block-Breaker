@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+using System.Net.Http;
 
 public class Ball : MonoBehaviour
 {
@@ -15,8 +16,7 @@ public class Ball : MonoBehaviour
     //State
     Vector2 paddleToBallVector;
     private bool _hasStarted = false;
-    private bool _enableInput = true;
-    public static bool enableResume = true;
+    private bool _enableInput = true;    
 
     //Cache component reference.
     AudioSource myAudioSource;
@@ -28,7 +28,8 @@ public class Ball : MonoBehaviour
     {
         set
         {
-            value = _hasStarted;
+            Utility.myLog("Has stated " + _hasStarted);
+            _hasStarted = value;
         }
     }
 
