@@ -9,7 +9,7 @@ public static class StaticUrlScript
     public static string currentLevel = "CurrentLevel";
 
     //GameScene
-    public static string GameOver = "03 Game Over";
+    public static string GameOver = "GameOver";
     public static string Dashboard = "01 Start Menu";
     //Firebase
     public static string StartGame_Firebase = "StartGame";
