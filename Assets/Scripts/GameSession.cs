@@ -27,7 +27,7 @@ public class GameSession : MonoBehaviour
     private bool isPaused = false;
     public TMP_Text adLoadTimer;
 
-    [SerializeField] private Button _retryBtn, _resumeBtn, _pauseBtn;
+    [SerializeField] private Button _retryBtn, _resumeBtn, _pauseBtn, _quitBtn;
 
     //RewardedAds adsInstance;
     [SerializeField] public GameObject gameOverPanel;
@@ -123,13 +123,18 @@ public class GameSession : MonoBehaviour
 
         _resumeBtn.onClick.AddListener(() =>
         {
-            ResumeGame();
+            ShowResumeAd(AdManager.Instance.IsInterstitialReady);
         });
 
 
         _pauseBtn.onClick.AddListener(() =>
         {
             PauseGame();
+        });
+
+        _quitBtn.onClick.AddListener(() =>
+        {
+            ExitGame();
         });
 
         // Optional: Log to confirm listeners are being added
@@ -149,12 +154,27 @@ public class GameSession : MonoBehaviour
 
     }
 
+    void ExitGame()
+    {
+        Application.Quit();
+    }
+
     /// <summary>
     /// Updating Level counter on every time LevelUpdateEvent Fires
     /// </summary>
     private void LevelUpdate()
     {
         displayLevel.text = "Level: " + PlayerPrefs.GetInt(StaticUrlScript.currentLevel).ToString();
+    }
+
+    void ShowResumeAd(bool status)
+    {
+        AdManager.Instance.OnInterstitialAdClosedEvent.AddListener(() => { ResumeGame(); });
+        AdManager.Instance.OnInterstitialAdFailedEvent.AddListener(() => { ResumeGame(); });
+
+        _resumeBtn.interactable = status;
+        AdManager.Instance.ShowAd();
+
     }
 
     /// <summary>

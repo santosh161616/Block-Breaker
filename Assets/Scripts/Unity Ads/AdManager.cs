@@ -13,7 +13,9 @@ public class AdManager : MonoBehaviour, IUnityAdsInitializationListener, IUnityA
     private string _gameId;
 
     [SerializeField] string _androidAdUnitId = "Interstitial_Android";
+    [SerializeField] string _rewardedAdUnitId = "Rewarded_Android";
     string _adUnitId;
+    private bool _isAdLoaded = false;
 
 
     #region SingleTon
@@ -71,7 +73,7 @@ public class AdManager : MonoBehaviour, IUnityAdsInitializationListener, IUnityA
         _onInitilizationCompleteEvent = LoadAd;
         InitializeAds();
     }
-    
+
     public void OnInitializationComplete()
     {
         Debug.Log("Unity Ads initialization complete.");
@@ -104,17 +106,22 @@ public class AdManager : MonoBehaviour, IUnityAdsInitializationListener, IUnityA
         // Note that if the ad content wasn't previously loaded, this method will fail
         Debug.Log("Showing Ad: " + _adUnitId);
         Advertisement.Show(_adUnitId, this);
+        _isAdLoaded = false;
     }
+
+    public bool IsInterstitialReady => _isAdLoaded;
 
     // Implement Load Listener and Show Listener interface methods: 
     public void OnUnityAdsAdLoaded(string adUnitId)
     {
         // Optionally execute code if the Ad Unit successfully loads content.
+        _isAdLoaded = true;
     }
 
     public void OnUnityAdsFailedToLoad(string _adUnitId, UnityAdsLoadError error, string message)
     {
         Debug.Log($"Error loading Ad Unit: {_adUnitId} - {error.ToString()} - {message}");
+        _isAdLoaded = false;
         // Optionally execute code if the Ad Unit fails to load, such as attempting to try again.
     }
 
@@ -132,5 +139,6 @@ public class AdManager : MonoBehaviour, IUnityAdsInitializationListener, IUnityA
     {
         OnInterstitialAdClosedEvent.Invoke();
         LoadAd();
+        _isAdLoaded = false;
     }
 }
