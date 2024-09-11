@@ -25,7 +25,7 @@ public class GameSession : MonoBehaviour
     [SerializeField] int currentScore = 0;
 
     private bool isPaused = false;
-    public TMP_Text adLoadTimer;
+    public TMP_Text _adText;
 
     [SerializeField] private Button _retryBtn, _resumeBtn, _pauseBtn, _quitBtn;
 
@@ -34,7 +34,7 @@ public class GameSession : MonoBehaviour
 
     FirebaseApp app;
 
-    private bool _isResumeValid = true;
+    //private bool _isResumeValid = true;
     #region Unity Singleton
     private static GameSession instance;
     public static GameSession Instance
@@ -60,6 +60,8 @@ public class GameSession : MonoBehaviour
             Destroy(gameObject);
         }
         DontDestroyOnLoad(gameObject);
+
+        LoaderManager.Instance.DisableLoader();
     }
     #endregion
 
@@ -69,7 +71,6 @@ public class GameSession : MonoBehaviour
     public Action StartGameAction;
     #endregion
 
-    public bool IsResumeValid => _isResumeValid;
     private void OnEnable()
     {
         StartGameAction += InitFirebase;
@@ -123,7 +124,7 @@ public class GameSession : MonoBehaviour
 
         _resumeBtn.onClick.AddListener(() =>
         {
-            ShowResumeAd(AdManager.Instance.IsInterstitialReady);
+            ShowResumeAd(AdsController.Instance.IsRewardedAdReady, StaticUrlScript.RewardedAdUnitId);
         });
 
 
@@ -167,14 +168,20 @@ public class GameSession : MonoBehaviour
         displayLevel.text = "Level: " + PlayerPrefs.GetInt(StaticUrlScript.currentLevel).ToString();
     }
 
-    void ShowResumeAd(bool status)
+    void ShowResumeAd(bool status, string _adUnitId)
     {
-        AdManager.Instance.OnInterstitialAdClosedEvent.AddListener(() => { ResumeGame(); });
-        AdManager.Instance.OnInterstitialAdFailedEvent.AddListener(() => { ResumeGame(); });
-
+        if (status)
+        {
+            AdsController.Instance.OnAdClosedEvent.AddListener(() => { ResumeGame(); });
+            AdsController.Instance.OnAdFailedEvent.AddListener(() => { ResumeGame(); });
+            _adText.text = "Watch Ad";
+        }
+        else
+        {
+            _adText.text = "No Ads";
+        }
         _resumeBtn.interactable = status;
-        AdManager.Instance.ShowAd();
-
+        AdsController.Instance.ShowAd(_adUnitId);
     }
 
     /// <summary>
@@ -191,10 +198,10 @@ public class GameSession : MonoBehaviour
         Ball.instance.HasStarted = false;
         gameOverPanel?.SetActive(false);
         Utility.myLog("Game Resume");
-        if (_isResumeValid)
-        {
-            _isResumeValid = false;
-        }
+        //if (_isResumeValid)
+        //{
+        //    _isResumeValid = false;
+        //}
     }
 
     /// <summary>
@@ -205,7 +212,7 @@ public class GameSession : MonoBehaviour
         Utility.myLog("Game Level  Resetted!");
         gameOverPanel?.SetActive(false);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        _isResumeValid = true;
+        //_isResumeValid = true;
         Ball.instance.HasStarted = false;
     }
 
@@ -258,12 +265,13 @@ public class GameSession : MonoBehaviour
 
     public void EnableGameOverPnl()
     {
-        if (!_isResumeValid)
-        {
-            SceneManager.LoadSceneAsync(StaticUrlScript.GameOver);
-            return;
-        }
+        //if (!_isResumeValid)
+        //{
+        //    SceneManager.LoadSceneAsync(StaticUrlScript.GameOver);
+        //    return;
+        //}
         gameOverPanel?.SetActive(true);
+        LoaderManager.Instance.DisableLoader();
     }
 
     private void OnDisable()

@@ -10,6 +10,7 @@ public class LoseCollider : MonoBehaviour
     {
         if(collision.tag == "Ball")
         {
+            LoaderManager.Instance.EnableLoader();
             collision.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
         }        
         GameSession.Instance.EnableGameOverPnl();
