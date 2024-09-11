@@ -15,7 +15,6 @@ dependencies {
 // Android Resolver Exclusions Start
 android {
   packagingOptions {
-      exclude ('/lib/arm64-v8a/*' + '*')
       exclude ('/lib/armeabi/*' + '*')
       exclude ('/lib/mips/*' + '*')
       exclude ('/lib/mips64/*' + '*')
@@ -25,8 +24,8 @@ android {
 }
 // Android Resolver Exclusions End
 android {
+    namespace "com.unity3d.player"
     ndkPath "**NDKPATH**"
-
     compileSdkVersion **APIVERSION**
     buildToolsVersion '**BUILDTOOLS**'
 
