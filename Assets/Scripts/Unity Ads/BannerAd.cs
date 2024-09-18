@@ -34,8 +34,6 @@ public class BannerAd : MonoBehaviour
         // Configure the Load Banner button to call the LoadBanner() method when clicked:
         _loadBannerButton.onClick.AddListener(LoadBanner);
         _loadBannerButton.interactable = true;
-
-        LoadBanner();
     }
 
     // Implement a method to call when the Load Banner button is clicked:
@@ -75,7 +73,7 @@ public class BannerAd : MonoBehaviour
     }
 
     // Implement a method to call when the Show Banner button is clicked:
-    public void ShowBannerAd()
+    void ShowBannerAd()
     {
         // Set up options to notify the SDK of show events:
         BannerOptions options = new BannerOptions

@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+using System.Net.Http;
 
 public class Ball : MonoBehaviour
 {
@@ -14,15 +15,31 @@ public class Ball : MonoBehaviour
 
     //State
     Vector2 paddleToBallVector;
-    public static bool hasStarted = false;
-    public static bool enableInput = true;
-    public static bool enableResume = true;
+    private bool _hasStarted = false;
+    private bool _enableInput = true;    
 
     //Cache component reference.
     AudioSource myAudioSource;
     Rigidbody2D myRigidBody2D;
 
     public static Ball instance;
+
+    public bool HasStarted
+    {
+        set
+        {
+            Utility.myLog("Has stated " + _hasStarted);
+            _hasStarted = value;
+        }
+    }
+
+    public bool EnableInput
+    {
+        set
+        {
+            value = _enableInput;
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -39,7 +56,7 @@ public class Ball : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!hasStarted)
+        if (!_hasStarted)
         {
             LockBallToPaddle();
         }
@@ -52,10 +69,10 @@ public class Ball : MonoBehaviour
 
     public void LaunchOnMouseClick()
     {
-        if (enableInput && !hasStarted)
+        if (_enableInput && !_hasStarted)
         {
             // enableButton.SetActive(false);
-            hasStarted = true;
+            _hasStarted = true;
             myRigidBody2D.velocity = new Vector2(xPush, yPush);
         }
     }
@@ -69,17 +86,17 @@ public class Ball : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         Vector2 velocityTweak = new Vector2(Random.Range(-randomFactor, randomFactor), Random.Range(-randomFactor, randomFactor));
-        if (enableInput)
+        if (_enableInput)
         {
             AudioClip clip = ballSounds[UnityEngine.Random.Range(0, ballSounds.Length)];
             myAudioSource.PlayOneShot(clip);
 
             myRigidBody2D.velocity = myRigidBody2D.velocity.normalized * 7f;
-            Debug.Log(myRigidBody2D.velocity.normalized + "Before Tweak" + velocityTweak);
+            //Debug.Log(myRigidBody2D.velocity.normalized + "Before Tweak" + velocityTweak);
 
             myRigidBody2D.velocity += velocityTweak;
 
-            Debug.Log(myRigidBody2D.velocity + "Velocity Tweak" + velocityTweak);
+            //Debug.Log(myRigidBody2D.velocity + "Velocity Tweak" + velocityTweak);
         }
 
     }

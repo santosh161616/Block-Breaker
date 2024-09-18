@@ -1,129 +1,144 @@
+//using Firebase;
+//using Firebase.Extensions;
+using System;
 using UnityEngine;
 using UnityEngine.Advertisements;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class AdManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowListener
+public class AdManager : MonoBehaviour, IUnityAdsInitializationListener, IUnityAdsLoadListener, IUnityAdsShowListener
 {
-    [Header("Interstitial Ad")]
-    [SerializeField] string interstitialAndroidAdUnitId = "Interstitial_Android";
-    [SerializeField] string interstitialiOSAdUnitId = "Interstitial_iOS";
-    private string interstitialAdUnitId;
+    [SerializeField] string _androidGameId;
+    [SerializeField] bool _testMode = true;
+    private string _gameId;
 
-    [Header("Rewarded Ad")]
-    [SerializeField] Button showRewardedAdButton;
-    [SerializeField] string rewardedAndroidAdUnitId = "Rewarded_Android";
-    [SerializeField] string rewardediOSAdUnitId = "Rewarded_iOS";
-    private string rewardedAdUnitId;
+    [SerializeField] string _androidAdUnitId = "Interstitial_Android";
+    [SerializeField] string _rewardedAdUnitId = "Rewarded_Android";
+    string _adUnitId;
+    private bool _isAdLoaded = false;
 
-    [Header("Banner Ad")]
-    [SerializeField] Button loadBannerButton;
-    [SerializeField] Button showBannerButton;
-    [SerializeField] Button hideBannerButton;
-    [SerializeField] BannerPosition bannerPosition = BannerPosition.BOTTOM_CENTER;
-    [SerializeField] string bannerAndroidAdUnitId = "Banner_Android";
-    [SerializeField] string banneriOSAdUnitId = "Banner_iOS";
-    private string bannerAdUnitId;
 
-    private void Awake()
+    #region SingleTon
+    private static AdManager _instance;
+    public static AdManager Instance
     {
-        // Get Ad Unit IDs based on the current platform:
-#if UNITY_IOS
-        interstitialAdUnitId = interstitialiOSAdUnitId;
-        rewardedAdUnitId = rewardediOSAdUnitId;
-        bannerAdUnitId = banneriOSAdUnitId;
-#elif UNITY_ANDROID
-        interstitialAdUnitId = interstitialAndroidAdUnitId;
-        rewardedAdUnitId = rewardedAndroidAdUnitId;
-        bannerAdUnitId = bannerAndroidAdUnitId;
-#endif
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<AdManager>();
+            }
+            return _instance;
+        }
+        set
+        {
+            _instance = value;
+        }
+    }
 
-        // Initialize Ads (usually done in another script):
+
+    void Awake()
+    {
+        if (_instance == null)
+        {
+            _instance = this;
+        }
+        else if (_instance != this)
+        {
+            Destroy(gameObject);
+        }
+        DontDestroyOnLoad(gameObject);
+    }
+    #endregion
+
+    #region Init UnitySDK
+    public void InitializeAds()
+    {
+#if UNITY_IOS
+            //_gameId = _iOSGameId;
+#elif UNITY_ANDROID
+        _gameId = _androidGameId;
+#elif UNITY_EDITOR
+            _gameId = _androidGameId; //Only for testing the functionality in the Editor
+#endif
+        if (!Advertisement.isInitialized && Advertisement.isSupported)
+        {
+            Advertisement.Initialize(_gameId, _testMode, this);
+
+        }
+    }
+    private void Start()
+    {
+        _adUnitId = _androidAdUnitId;
+        _onInitilizationCompleteEvent = LoadAd;
         InitializeAds();
     }
 
-    private void InitializeAds()
+    public void OnInitializationComplete()
     {
-        // Initialize Unity Ads here if needed.
-         Advertisement.Initialize(rewardedAdUnitId, true);
+        Debug.Log("Unity Ads initialization complete.");
+        _onInitilizationCompleteEvent.Invoke();
     }
 
-    // Load Interstitial Ad:
-    public void LoadInterstitialAd()
+    public void OnInitializationFailed(UnityAdsInitializationError error, string message)
     {
-        Debug.Log("Loading Interstitial Ad: " + interstitialAdUnitId);
-        Advertisement.Load(interstitialAdUnitId, this);
+        Debug.Log($"Unity Ads Initialization Failed: {error.ToString()} - {message}");
     }
 
-    // Show Interstitial Ad:
-    public void ShowInterstitialAd()
+    #endregion
+
+    public UnityEvent OnInterstitialAdFailedEvent = new UnityEvent();
+    public UnityEvent OnInterstitialAdClosedEvent = new UnityEvent();
+    public Action _onInitilizationCompleteEvent;
+
+
+    // Load content to the Ad Unit:
+    public void LoadAd()
     {
-        Debug.Log("Showing Interstitial Ad: " + interstitialAdUnitId);
-        Advertisement.Show(interstitialAdUnitId, this);
+        // IMPORTANT! Only load content AFTER initialization (in this example, initialization is handled in a different script).
+        Debug.Log("Loading Ad: " + _adUnitId);
+        Advertisement.Load(_adUnitId, this);
     }
 
-    // Load Rewarded Ad:
-    public void LoadRewardedAd()
+    // Show the loaded content in the Ad Unit:
+    public void ShowAd()
     {
-        Debug.Log("Loading Rewarded Ad: " + rewardedAdUnitId);
-        Advertisement.Load(rewardedAdUnitId, this);
+        // Note that if the ad content wasn't previously loaded, this method will fail
+        Debug.Log("Showing Ad: " + _adUnitId);
+        Advertisement.Show(_adUnitId, this);
+        _isAdLoaded = false;
     }
 
-    // Show Rewarded Ad:
-    public void ShowRewardedAd()
+    public bool IsInterstitialReady => _isAdLoaded;
+
+    // Implement Load Listener and Show Listener interface methods: 
+    public void OnUnityAdsAdLoaded(string adUnitId)
     {
-        Debug.Log("Showing Rewarded Ad: " + rewardedAdUnitId);
-        Advertisement.Show(rewardedAdUnitId, this);
+        // Optionally execute code if the Ad Unit successfully loads content.
+        _isAdLoaded = true;
     }
 
-    // Load Banner Ad:
-    public void LoadBannerAd()
+    public void OnUnityAdsFailedToLoad(string _adUnitId, UnityAdsLoadError error, string message)
     {
-        Debug.Log("Loading Banner Ad: " + bannerAdUnitId);
-
-        BannerLoadOptions options = new BannerLoadOptions
-        {
-            loadCallback = OnBannerLoaded,
-            errorCallback = OnBannerError
-        };
-
-        Advertisement.Banner.Load(bannerAdUnitId, options);
+        Debug.Log($"Error loading Ad Unit: {_adUnitId} - {error.ToString()} - {message}");
+        _isAdLoaded = false;
+        // Optionally execute code if the Ad Unit fails to load, such as attempting to try again.
     }
 
-    // Show Banner Ad:
-    public void ShowBannerAd()
+    public void OnUnityAdsShowFailure(string _adUnitId, UnityAdsShowError error, string message)
     {
-        Debug.Log("Showing Banner Ad: " + bannerAdUnitId);
-
-        BannerOptions options = new BannerOptions
-        {
-            clickCallback = OnBannerClicked,
-            hideCallback = OnBannerHidden,
-            showCallback = OnBannerShown
-        };
-
-        Advertisement.Banner.SetPosition(bannerPosition);
-        Advertisement.Banner.Show(bannerAdUnitId, options);
+        Debug.Log($"Error showing Ad Unit {_adUnitId}: {error.ToString()} - {message}");
+        OnInterstitialAdFailedEvent.Invoke();
+        LoadAd();
+        // Optionally execute code if the Ad Unit fails to show, such as loading another ad.
     }
 
-    // Hide Banner Ad:
-    public void HideBannerAd()
+    public void OnUnityAdsShowStart(string _adUnitId) { }
+    public void OnUnityAdsShowClick(string _adUnitId) { }
+    public void OnUnityAdsShowComplete(string _adUnitId, UnityAdsShowCompletionState showCompletionState)
     {
-        Debug.Log("Hiding Banner Ad");
-        Advertisement.Banner.Hide();
+        OnInterstitialAdClosedEvent.Invoke();
+        LoadAd();
+        _isAdLoaded = false;
     }
-
-    // Implement IUnityAdsLoadListener and IUnityAdsShowListener methods:
-    public void OnUnityAdsAdLoaded(string adUnitId) { }
-    public void OnUnityAdsFailedToLoad(string adUnitId, UnityAdsLoadError error, string message) { }
-    public void OnUnityAdsShowFailure(string adUnitId, UnityAdsShowError error, string message) { }
-    public void OnUnityAdsShowStart(string adUnitId) { }
-    public void OnUnityAdsShowClick(string adUnitId) { }
-    public void OnUnityAdsShowComplete(string adUnitId, UnityAdsShowCompletionState showCompletionState) { }
-
-    // Implement Banner Ad callbacks:
-    private void OnBannerLoaded() { }
-    private void OnBannerError(string message) { }
-    private void OnBannerClicked() { }
-    private void OnBannerShown() { }
-    private void OnBannerHidden() { }
 }

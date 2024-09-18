@@ -26,6 +26,8 @@ public class SceneLoader : MonoBehaviour
         SceneManager.LoadScene(currentSceneIndex + 1);
         currentLevel = currentSceneIndex + 1;
         PlayerPrefs.SetInt(StaticUrlScript.currentLevel, currentLevel);
+
+        LoaderManager.Instance.EnableLoader();
         GameSession.Instance.LevelUpdateEvent.Invoke();
     }
 
@@ -40,12 +42,5 @@ public class SceneLoader : MonoBehaviour
     public void LoadStartScean()
     {
         SceneManager.LoadScene(PlayerPrefs.GetInt(StaticUrlScript.currentLevel));
-        //GameSession.Instance.GameOver();
     }
-
-    public void QuitGame()
-    {
-        Application.Quit();
-    }
-
 }

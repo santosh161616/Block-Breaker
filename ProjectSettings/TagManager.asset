@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Breakable
   - Unbreakable
+  - Ball
   layers:
   - Default
   - TransparentFX
