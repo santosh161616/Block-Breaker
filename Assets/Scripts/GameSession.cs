@@ -6,9 +6,9 @@ using TMPro;
 using UnityEngine.SceneManagement;
 using System;
 using UnityEngine.Events;
-using Firebase.Extensions;
-using Firebase;
-using Firebase.Analytics;
+//using Firebase.Extensions;
+//using Firebase;
+//using Firebase.Analytics;
 
 public class GameSession : MonoBehaviour
 {
@@ -32,7 +32,6 @@ public class GameSession : MonoBehaviour
     //RewardedAds adsInstance;
     [SerializeField] public GameObject gameOverPanel;
 
-    FirebaseApp app;
 
     //private bool _isResumeValid = true;
     #region Unity Singleton
@@ -71,9 +70,44 @@ public class GameSession : MonoBehaviour
     public Action StartGameAction;
     #endregion
 
+    #region Firebase Init & Messaging
+    //public void OnTokenReceived(object sender, Firebase.Messaging.TokenReceivedEventArgs token)
+    //{
+    //    UnityEngine.Debug.Log("Received Registration Token: " + token.Token);
+    //}
+
+    //public void OnMessageReceived(object sender, Firebase.Messaging.MessageReceivedEventArgs e)
+    //{
+    //    UnityEngine.Debug.Log("Received a new message from: " + e.Message.From);
+    //}
+
+    //void InitFirebase()
+    //{
+    //    Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
+    //    {
+    //        var dependencyStatus = task.Result;
+    //        if (dependencyStatus == Firebase.DependencyStatus.Available)
+    //        {
+    //            // Create and hold a reference to your FirebaseApp,
+    //            // where app is a Firebase.FirebaseApp property of your application class.
+    //            FirebaseApp app = Firebase.FirebaseApp.DefaultInstance;
+
+    //            // Set a flag here to indicate whether Firebase is ready to use by your app.
+    //        }
+    //        else
+    //        {
+    //            UnityEngine.Debug.LogError(System.String.Format(
+    //              "Could not resolve all Firebase dependencies: {0}", dependencyStatus));
+    //            // Firebase Unity SDK is not safe to use here.
+    //        }
+    //    });
+
+    //}
+    #endregion
+
     private void OnEnable()
     {
-        StartGameAction += InitFirebase;
+        //StartGameAction += InitFirebase;
         StartGameAction += AddingListeners;
     }
     // Start is called before the first frame update
@@ -87,31 +121,14 @@ public class GameSession : MonoBehaviour
         /// <summary>
         /// Firebase Start Game Event
         /// </summary>
-        FirebaseAnalytics.LogEvent(StaticUrlScript.StartGame_Firebase);
+        //FirebaseAnalytics.LogEvent(StaticUrlScript.StartGame_Firebase);
+
+        ////Firebase Messaging Events
+        //Firebase.Messaging.FirebaseMessaging.TokenReceived += OnTokenReceived;
+        //Firebase.Messaging.FirebaseMessaging.MessageReceived += OnMessageReceived;
     }
 
-    void InitFirebase()
-    {
-        Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
-        {
-            var dependencyStatus = task.Result;
-            if (dependencyStatus == Firebase.DependencyStatus.Available)
-            {
-                // Create and hold a reference to your FirebaseApp,
-                // where app is a Firebase.FirebaseApp property of your application class.
-                app = Firebase.FirebaseApp.DefaultInstance;
 
-                // Set a flag here to indicate whether Firebase is ready to use by your app.
-            }
-            else
-            {
-                UnityEngine.Debug.LogError(System.String.Format(
-                  "Could not resolve all Firebase dependencies: {0}", dependencyStatus));
-                // Firebase Unity SDK is not safe to use here.
-            }
-        });
-
-    }
     void AddingListeners()
     {
 
@@ -170,18 +187,21 @@ public class GameSession : MonoBehaviour
 
     void ShowResumeAd(bool status, string _adUnitId)
     {
+        _resumeBtn.interactable = status;
+        Utility.myLog("Status of Ads -" + status);
+ 
         if (status)
         {
             AdsController.Instance.OnAdClosedEvent.AddListener(() => { ResumeGame(); });
             AdsController.Instance.OnAdFailedEvent.AddListener(() => { ResumeGame(); });
             _adText.text = "Watch Ad";
+            AdsController.Instance.ShowAd(_adUnitId);
         }
         else
         {
             _adText.text = "No Ads";
         }
-        _resumeBtn.interactable = status;
-        AdsController.Instance.ShowAd(_adUnitId);
+
     }
 
     /// <summary>
@@ -277,7 +297,7 @@ public class GameSession : MonoBehaviour
     private void OnDisable()
     {
         StartGameAction -= AddingListeners;
-        StartGameAction -= InitFirebase;
+        //StartGameAction -= InitFirebase;
     }
 
 }

@@ -118,8 +118,27 @@ public class AdsController : MonoBehaviour, IUnityAdsInitializationListener, IUn
     }
 
     // Checking if Ad is Ready to Show.
-    public bool IsInterstitialAdReady => _isAdLoaded[StaticUrlScript.InterstitialAdUnit];
-    public bool IsRewardedAdReady => _isAdLoaded[StaticUrlScript.RewardedAdUnitId];
+    public bool IsInterstitialAdReady
+    {
+        get
+        {
+            if (_isAdLoaded.ContainsKey(StaticUrlScript.InterstitialAdUnit))
+                return _isAdLoaded[StaticUrlScript.InterstitialAdUnit];
+            else
+                return false; // Return false if the key doesn't exist
+        }
+    }
+
+    public bool IsRewardedAdReady
+    {
+        get
+        {
+            if (_isAdLoaded.ContainsKey(StaticUrlScript.RewardedAdUnitId))
+                return _isAdLoaded[StaticUrlScript.RewardedAdUnitId];
+            else
+                return false;
+        }
+    }
 
 
     // Implement Load Listener and Show Listener interface methods: 

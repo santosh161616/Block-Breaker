@@ -4823,7 +4823,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: fc5ebdf5ee66d234ba8f526a599b332e, type: 3}
   toggleImage: {fileID: 901705546}
   currentScore: 0
-  _adText: {fileID: 0}
+  _adText: {fileID: 1361425925}
   _retryBtn: {fileID: 1749358445}
   _resumeBtn: {fileID: 129418974}
   _pauseBtn: {fileID: 901705547}
