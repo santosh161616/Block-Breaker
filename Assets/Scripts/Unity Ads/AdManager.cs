@@ -1,5 +1,5 @@
-using Firebase;
-using Firebase.Extensions;
+//using Firebase;
+//using Firebase.Extensions;
 using System;
 using UnityEngine;
 using UnityEngine.Advertisements;

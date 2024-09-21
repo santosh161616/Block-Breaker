@@ -7,7 +7,6 @@ using UnityEngine.Events;
 public class AdsController : MonoBehaviour, IUnityAdsInitializationListener, IUnityAdsLoadListener, IUnityAdsShowListener
 {
     [SerializeField] string _androidGameId;
-    [SerializeField] string _iOSGameId;
     [SerializeField] bool _testMode = true;
     private string _gameId;
 
@@ -63,9 +62,7 @@ public class AdsController : MonoBehaviour, IUnityAdsInitializationListener, IUn
     }
     public void InitializeAds()
     {
-#if UNITY_IOS
-            _gameId = _iOSGameId;
-#elif UNITY_ANDROID
+#if UNITY_ANDROID
         _gameId = _androidGameId;
 #elif UNITY_EDITOR
             _gameId = _androidGameId; //Only for testing the functionality in the Editor
@@ -118,8 +115,27 @@ public class AdsController : MonoBehaviour, IUnityAdsInitializationListener, IUn
     }
 
     // Checking if Ad is Ready to Show.
-    public bool IsInterstitialAdReady => _isAdLoaded[StaticUrlScript.InterstitialAdUnit];
-    public bool IsRewardedAdReady => _isAdLoaded[StaticUrlScript.RewardedAdUnitId];
+    public bool IsInterstitialAdReady
+    {
+        get
+        {
+            if (_isAdLoaded.ContainsKey(StaticUrlScript.InterstitialAdUnit))
+                return _isAdLoaded[StaticUrlScript.InterstitialAdUnit];
+            else
+                return false; // Return false if the key doesn't exist
+        }
+    }
+
+    public bool IsRewardedAdReady
+    {
+        get
+        {
+            if (_isAdLoaded.ContainsKey(StaticUrlScript.RewardedAdUnitId))
+                return _isAdLoaded[StaticUrlScript.RewardedAdUnitId];
+            else
+                return false;
+        }
+    }
 
 
     // Implement Load Listener and Show Listener interface methods: 

@@ -2,7 +2,11 @@ fileFormatVersion: 2
 guid: 5d46f3be89af4272b9f8990f26048598
 labels:
 - gvh
+<<<<<<< HEAD
 - gvh_version-12.2.0
+=======
+- gvh_version-12.0.0
+>>>>>>> FixingFirbaseBuild
 - gvhp_exportpath-Firebase/Plugins/x86_64/FirebaseCppMessaging.bundle
 timeCreated: 1480838400
 PluginImporter:

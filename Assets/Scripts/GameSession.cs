@@ -81,7 +81,7 @@ public class GameSession : MonoBehaviour
         UnityEngine.Debug.Log("Received a new message from: " + e.Message.From);
     }
 
-    void InitFirebase()
+    void InitFirebase(Action OnCompleteEvent)
     {
         Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
         {
@@ -91,7 +91,8 @@ public class GameSession : MonoBehaviour
                 // Create and hold a reference to your FirebaseApp,
                 // where app is a Firebase.FirebaseApp property of your application class.
                 FirebaseApp app = Firebase.FirebaseApp.DefaultInstance;
-
+                OnCompleteEvent.Invoke();
+                Utility.myLog("Firebase Initilized!");
                 // Set a flag here to indicate whether Firebase is ready to use by your app.
             }
             else
@@ -103,21 +104,9 @@ public class GameSession : MonoBehaviour
         });
 
     }
-    #endregion
 
-    private void OnEnable()
+    void FirebaseEvents()
     {
-        StartGameAction += InitFirebase;
-        StartGameAction += AddingListeners;
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-        StartGameAction?.Invoke();
-
-        highScoreText.text = PlayerPrefs.GetInt(StaticUrlScript.highScore).ToString();
-        LevelUpdateEvent.AddListener(LevelUpdate);
-
         /// <summary>
         /// Firebase Start Game Event
         /// </summary>
@@ -127,7 +116,21 @@ public class GameSession : MonoBehaviour
         Firebase.Messaging.FirebaseMessaging.TokenReceived += OnTokenReceived;
         Firebase.Messaging.FirebaseMessaging.MessageReceived += OnMessageReceived;
     }
+    #endregion
 
+    private void OnEnable()
+    {
+        StartGameAction += AddingListeners;
+        StartGameAction += FirebaseEvents;
+    }
+    // Start is called before the first frame update
+    void Start()
+    {
+        InitFirebase(StartGameAction);
+
+        highScoreText.text = PlayerPrefs.GetInt(StaticUrlScript.highScore).ToString();
+        LevelUpdateEvent.AddListener(LevelUpdate);
+    }
 
     void AddingListeners()
     {
@@ -187,18 +190,21 @@ public class GameSession : MonoBehaviour
 
     void ShowResumeAd(bool status, string _adUnitId)
     {
+        _resumeBtn.interactable = status;
+        Utility.myLog("Status of Ads -" + status);
+
         if (status)
         {
             AdsController.Instance.OnAdClosedEvent.AddListener(() => { ResumeGame(); });
             AdsController.Instance.OnAdFailedEvent.AddListener(() => { ResumeGame(); });
             _adText.text = "Watch Ad";
+            AdsController.Instance.ShowAd(_adUnitId);
         }
         else
         {
             _adText.text = "No Ads";
         }
-        _resumeBtn.interactable = status;
-        AdsController.Instance.ShowAd(_adUnitId);
+
     }
 
     /// <summary>
@@ -294,7 +300,7 @@ public class GameSession : MonoBehaviour
     private void OnDisable()
     {
         StartGameAction -= AddingListeners;
-        StartGameAction -= InitFirebase;
+        StartGameAction -= FirebaseEvents;
+        StartGameAction = null;
     }
-
 }

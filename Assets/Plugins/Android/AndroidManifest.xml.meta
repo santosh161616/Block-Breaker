@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: 78490dcd1017b9144b69eb51274d9947
+=======
+guid: 5622e834381d0d641bfe0b6ac002a49f
+>>>>>>> FixingFirbaseBuild
 TextScriptImporter:
   externalObjects: {}
   userData: 

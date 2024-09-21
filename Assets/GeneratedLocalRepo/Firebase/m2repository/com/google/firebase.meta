@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: a437f33800bfe43498f8728a0a24c6d5
+=======
+guid: 8f646f18507872e44bae2eb85654b9ba
+>>>>>>> FixingFirbaseBuild
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

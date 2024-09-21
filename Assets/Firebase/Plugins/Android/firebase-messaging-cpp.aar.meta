@@ -2,7 +2,11 @@ fileFormatVersion: 2
 guid: 0be2cda49adc4b61a7e9eb9bf669fdab
 labels:
 - gvh
+<<<<<<< HEAD
 - gvh_version-12.2.0
+=======
+- gvh_version-12.0.0
+>>>>>>> FixingFirbaseBuild
 - gvhp_exportpath-Firebase/Plugins/Android/firebase-messaging-cpp.aar
 timeCreated: 1480838400
 PluginImporter:
