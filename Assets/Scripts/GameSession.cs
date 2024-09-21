@@ -30,7 +30,7 @@ public class GameSession : MonoBehaviour
     [SerializeField] private Button _retryBtn, _resumeBtn, _pauseBtn, _quitBtn;
 
     //RewardedAds adsInstance;
-    [SerializeField] public GameObject gameOverPanel;
+    [SerializeField] public GameObject gameOverPanel, resultPanel;
 
 
     //private bool _isResumeValid = true;
@@ -60,7 +60,6 @@ public class GameSession : MonoBehaviour
         }
         DontDestroyOnLoad(gameObject);
 
-        LoaderManager.Instance.DisableLoader();
     }
     #endregion
 
@@ -107,11 +106,6 @@ public class GameSession : MonoBehaviour
 
     void FirebaseEvents()
     {
-        /// <summary>
-        /// Firebase Start Game Event
-        /// </summary>
-        FirebaseAnalytics.LogEvent(StaticUrlScript.StartGame_Firebase);
-
         //Firebase Messaging Events
         Firebase.Messaging.FirebaseMessaging.TokenReceived += OnTokenReceived;
         Firebase.Messaging.FirebaseMessaging.MessageReceived += OnMessageReceived;
@@ -158,7 +152,7 @@ public class GameSession : MonoBehaviour
         {
             ExitGame();
         });
-
+       
         // Optional: Log to confirm listeners are being added
         Debug.Log("Listeners have been added to buttons");
     }
@@ -198,7 +192,7 @@ public class GameSession : MonoBehaviour
         {
             AdsController.Instance.OnAdClosedEvent.AddListener(() => { ResumeGame(); });
             AdsController.Instance.OnAdFailedEvent.AddListener(() => { ResumeGame(); });
-            _adText.text = "Watch Ad";
+
             AdsController.Instance.ShowAd(_adUnitId);
         }
         else
@@ -206,6 +200,17 @@ public class GameSession : MonoBehaviour
             _adText.text = "No Ads";
         }
 
+    }
+
+    private void UpdateResumeButtonStatus()
+    {
+        bool status = AdsController.Instance.IsRewardedAdReady;
+        _resumeBtn.interactable = status;
+
+        if (status)
+            _adText.text = "Watch Ad";
+        else
+            _adText.text = "No Ads";
     }
 
     /// <summary>
@@ -247,6 +252,7 @@ public class GameSession : MonoBehaviour
     {
         currentScore += pointPerBlockDestroyed;
         currentScoreText.text = currentScore.ToString();
+        PlayerPrefs.SetInt(StaticUrlScript.currentScore, currentScore);
         if (currentScore > PlayerPrefs.GetInt(StaticUrlScript.highScore))
         {
             PlayerPrefs.SetInt(StaticUrlScript.highScore, currentScore);
@@ -294,8 +300,14 @@ public class GameSession : MonoBehaviour
         //    SceneManager.LoadSceneAsync(StaticUrlScript.GameOver);
         //    return;
         //}
+        UpdateResumeButtonStatus();
         gameOverPanel?.SetActive(true);
         LoaderManager.Instance.DisableLoader();
+    }
+
+    public void EnableResultPanel(bool status)
+    {
+        resultPanel?.SetActive(status);
     }
 
     private void OnDisable()

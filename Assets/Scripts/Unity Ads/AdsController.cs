@@ -54,7 +54,7 @@ public class AdsController : MonoBehaviour, IUnityAdsInitializationListener, IUn
     {
         SDKInitEvent = () =>
         {
-            //LoadAd(StaticUrlScript.InterstitialAdUnit);
+            LoadAd(StaticUrlScript.InterstitialAdUnit);
             LoadAd(StaticUrlScript.RewardedAdUnitId);
         };
 

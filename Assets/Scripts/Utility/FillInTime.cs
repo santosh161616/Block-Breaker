@@ -10,46 +10,60 @@ public class FillInTime : MonoBehaviour
     [Space]
     [SerializeField] private Image _imageToFill;
     [SerializeField] private float _timeToFill = 5;
-    [SerializeField] private Button _DashboardBtn;
+    //[SerializeField] private Button _DashboardBtn;
 
     // Start is called before the first frame update
     void Start()
     {
-        CheckInternetConnection();
-        _DashboardBtn.interactable = false;
-        _DashboardBtn.onClick.AddListener(LoadSpinScene);
+        //CheckInternetConnection();       
         
         if (_autoReference) _imageToFill = GetComponent<Image>();
         EnableSliderFilling();
     }
 
     public void EnableSliderFilling()
-    {
-       
-
+    {      
         _imageToFill.DOFillAmount(1, _timeToFill).From(0).OnComplete(() =>
         {
-            _DashboardBtn.interactable = true;
-            
-            {
-                LoadSpinScene();
-            }
+            ShowAd();
+            GameSession.Instance.EnableResultPanel(false);
         });
-
     }
 
-    private void LoadSpinScene()
+    void ShowAd()
     {
-        SceneManager.LoadSceneAsync("dashboard");
-    }
-
-    public void CheckInternetConnection()
-    {
-        Utility.myLog("Internet Closed !!--- >");
-        if (Application.internetReachability == NetworkReachability.NotReachable)
+        if (AdsController.Instance.IsInterstitialAdReady)
         {
-            Utility.myError("Internet NOT CONNECTED---- >");
-            LoaderManager.Instance?.OpenRetryPanel(() => LoadSpinScene());
-        }       
+            AdsController.Instance.OnAdClosedEvent.RemoveAllListeners();
+            AdsController.Instance.OnAdClosedEvent.AddListener(() => LoadNextScene());
+            AdsController.Instance.OnAdFailedEvent.RemoveAllListeners();
+            AdsController.Instance.OnAdFailedEvent.AddListener(() => LoadNextScene());
+
+            AdsController.Instance.ShowAd(StaticUrlScript.InterstitialAdUnit);
+        }
+        else
+        {
+            LoadNextScene();
+        }
     }
+
+
+    void LoadNextScene()
+    {
+        SceneLoader.Instance.LoadNextScene();
+    }
+    //private void LoadSpinScene()
+    //{
+    //    SceneManager.LoadSceneAsync("dashboard");
+    //}
+
+    //public void CheckInternetConnection()
+    //{
+    //    Utility.myLog("Internet Closed !!--- >");
+    //    if (Application.internetReachability == NetworkReachability.NotReachable)
+    //    {
+    //        Utility.myError("Internet NOT CONNECTED---- >");
+    //        LoaderManager.Instance?.OpenRetryPanel(() => LoadSpinScene());
+    //    }       
+    //}
 }

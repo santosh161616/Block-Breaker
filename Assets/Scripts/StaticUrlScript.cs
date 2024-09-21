@@ -4,6 +4,7 @@ public static class StaticUrlScript
 
     //PlayerPrefs
     public static string highScore = "HighScore";
+    public static string currentScore = "CurrentScore";
     public static string currentLevel = "CurrentLevel";
 
     //GameScene

@@ -6,7 +6,10 @@ using UnityEngine.UI;
 public class Level : MonoBehaviour
 {
     [SerializeField] int breakableBlocks;
-
+    private void Start()
+    {
+        LoaderManager.Instance.DisableLoader();
+    }
     public void CountBlocks()
     {
         breakableBlocks++;
@@ -22,7 +25,8 @@ public class Level : MonoBehaviour
             Ball.instance.EnableInput = false;
 
             //StartCoroutine(LoadingCount());    //Added it to show Ad.        
-            SceneLoader.Instance.LoadNextScene();
+            //SceneLoader.Instance.LoadNextScene();
+            GameSession.Instance.EnableResultPanel(true);
         }
     }           
 }
