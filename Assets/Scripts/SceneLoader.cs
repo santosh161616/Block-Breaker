@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Firebase.Analytics;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -29,11 +30,17 @@ public class SceneLoader : MonoBehaviour
 
         LoaderManager.Instance.EnableLoader();
         GameSession.Instance.LevelUpdateEvent.Invoke();
+
+        //Firebase Event for Next Scene
+        FirebaseAnalytics.LogEvent(StaticUrlScript.NextLevel_Firebase);
     }
 
     public void LoadCurrentLevel()
     {
         SceneManager.LoadSceneAsync(PlayerPrefs.GetInt(StaticUrlScript.currentLevel, 1));
+     
+        //Firebase Evenet for StartGame.
+        FirebaseAnalytics.LogEvent(StaticUrlScript.StartGame_Firebase);
     }
     public void ScoreReset()
     {
