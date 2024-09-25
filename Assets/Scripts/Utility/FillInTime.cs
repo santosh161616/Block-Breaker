@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using UnityEngine.SceneManagement;
+using Firebase.Analytics;
 
 public class FillInTime : MonoBehaviour
 {
@@ -26,6 +27,7 @@ public class FillInTime : MonoBehaviour
         _imageToFill.DOFillAmount(1, _timeToFill).From(0).OnComplete(() =>
         {
             ShowAd();
+            FirebaseAnalytics.LogEvent(StaticUrlScript.GameEnd_Firebase);
             GameSession.Instance.EnableResultPanel(false);
         });
     }
@@ -39,6 +41,7 @@ public class FillInTime : MonoBehaviour
             AdsController.Instance.OnAdFailedEvent.RemoveAllListeners();
             AdsController.Instance.OnAdFailedEvent.AddListener(() => LoadNextScene());
 
+            FirebaseAnalytics.LogEvent(StaticUrlScript.InterstitialAd_Firebase);
             AdsController.Instance.ShowAd(StaticUrlScript.InterstitialAdUnit);
         }
         else

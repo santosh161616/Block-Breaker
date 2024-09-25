@@ -27,10 +27,10 @@ public class GameSession : MonoBehaviour
     private bool isPaused = false;
     public TMP_Text _adText;
 
-    [SerializeField] private Button _retryBtn, _resumeBtn, _pauseBtn, _quitBtn;
+    [SerializeField] private Button _retryBtn, _resumeBtn, _pauseBtn, _quitBtn, _onYes, _onNo;
 
     //RewardedAds adsInstance;
-    [SerializeField] public GameObject gameOverPanel, resultPanel;
+    [SerializeField] public GameObject gameOverPanel, resultPanel, gameSessionHead, exitPanel;
 
 
     //private bool _isResumeValid = true;
@@ -126,6 +126,14 @@ public class GameSession : MonoBehaviour
         LevelUpdateEvent.AddListener(LevelUpdate);
     }
 
+    public void SetScoreBar()
+    {
+        int index = SceneManager.GetActiveScene().buildIndex;
+        Debug.Log("Index -" + index);
+        if (index == 0)
+            gameSessionHead.SetActive(false);
+        else gameSessionHead.SetActive(true);
+    }
 
     void AddingListeners()
     {
@@ -150,11 +158,31 @@ public class GameSession : MonoBehaviour
 
         _quitBtn.onClick.AddListener(() =>
         {
+            LoaderManager.Instance.EnableLoader();
             ExitGame();
+            gameOverPanel?.SetActive(false);
         });
-       
+
+        ExitGameAction();
         // Optional: Log to confirm listeners are being added
         Debug.Log("Listeners have been added to buttons");
+    }
+
+    void ExitGameAction()
+    {
+        _onYes.onClick.RemoveAllListeners();
+        _onYes.onClick.AddListener(() => { YesBtnTask(); FirebaseAnalytics.LogEvent(StaticUrlScript.GameExit_Firebase); });
+
+        _onNo.onClick.RemoveAllListeners();
+        _onNo.onClick.AddListener(() => { ClosePanels(false); });
+    }
+
+    void YesBtnTask()
+    {
+        LoaderManager.Instance.EnableLoader();
+        ExitGame();
+        ClosePanels(false);
+        gameOverPanel.SetActive(false);
     }
     // Update is called once per frame
     void Update()
@@ -168,11 +196,31 @@ public class GameSession : MonoBehaviour
             Time.timeScale = 0f;
         }
 
+        //Check for Exit Game
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            int index = SceneManager.GetActiveScene().buildIndex;
+            if (index != 0)
+            {
+                ClosePanels(true);
+            }
+            else
+            {
+                //ApplicationC losed
+                Utility.myLog(">>>> Application Closed <<<< ");
+                Application.Quit();
+            }
+        }
+    }
+
+    void ClosePanels(bool status)
+    {
+        exitPanel?.SetActive(status);
     }
 
     void ExitGame()
     {
-        Application.Quit();
+        SceneManager.LoadSceneAsync(StaticUrlScript.Dashboard);
     }
 
     /// <summary>
@@ -190,9 +238,12 @@ public class GameSession : MonoBehaviour
 
         if (status)
         {
+            AdsController.Instance.OnAdClosedEvent.RemoveAllListeners();
+            AdsController.Instance.OnAdFailedEvent.RemoveAllListeners();
             AdsController.Instance.OnAdClosedEvent.AddListener(() => { ResumeGame(); });
             AdsController.Instance.OnAdFailedEvent.AddListener(() => { ResumeGame(); });
 
+            FirebaseAnalytics.LogEvent(StaticUrlScript.RewardedAd_Firebase);
             AdsController.Instance.ShowAd(_adUnitId);
         }
         else
@@ -243,6 +294,7 @@ public class GameSession : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         //_isResumeValid = true;
         Ball.instance.HasStarted = false;
+        FirebaseAnalytics.LogEvent(StaticUrlScript.ResetLevel_Firebase);
     }
 
     /// <summary>
@@ -261,15 +313,6 @@ public class GameSession : MonoBehaviour
         //        scoreText.text = currentScore.ToString();
     }
 
-    /// <summary>
-    /// Deletes the highScore playerprefs.
-    /// </summary>
-    public void ResetHighScore()
-    {
-        PlayerPrefs.DeleteKey(StaticUrlScript.highScore);
-        highScoreText.text = "0";
-        PlayerPrefs.Save();
-    }
 
     /// <summary>
     /// Simple pause game and change Sprites
@@ -302,7 +345,7 @@ public class GameSession : MonoBehaviour
         //}
         UpdateResumeButtonStatus();
         gameOverPanel?.SetActive(true);
-        LoaderManager.Instance.DisableLoader();
+        LoaderManager.Instance?.DisableLoader();
     }
 
     public void EnableResultPanel(bool status)

@@ -14,12 +14,14 @@ public class SceneLoader : MonoBehaviour
         {
             Instance = this;
         }
+        GameSession.Instance.SetScoreBar();
         currentLevel = PlayerPrefs.GetInt(StaticUrlScript.currentLevel);
         ///<summary>
         ///Making Event firing wait so Level can be updated.
         ///</summary>
         await Task.Delay(500);
         GameSession.Instance.LevelUpdateEvent.Invoke();
+        LoaderManager.Instance.DisableLoader();
     }
     public void LoadNextScene()
     {
@@ -32,7 +34,7 @@ public class SceneLoader : MonoBehaviour
         GameSession.Instance.LevelUpdateEvent.Invoke();
 
         //Firebase Event for Next Scene
-        FirebaseAnalytics.LogEvent(StaticUrlScript.NextLevel_Firebase);
+        FirebaseAnalytics.LogEvent(StaticUrlScript.NextLevel_Firebase, "CurrentLevel", currentSceneIndex);
     }
 
     public void LoadCurrentLevel()
@@ -42,10 +44,7 @@ public class SceneLoader : MonoBehaviour
         //Firebase Evenet for StartGame.
         FirebaseAnalytics.LogEvent(StaticUrlScript.StartGame_Firebase);
     }
-    public void ScoreReset()
-    {
-        GameSession.Instance.ResetHighScore();
-    }
+
     public void LoadStartScean()
     {
         SceneManager.LoadScene(PlayerPrefs.GetInt(StaticUrlScript.currentLevel));

@@ -13,8 +13,12 @@ public class Block : MonoBehaviour
 
     //State variable
     [SerializeField] int hitCount;  //Only for debug purpose
+
+    //Sound
+    float volume; 
     private void Awake()
     {
+        volume = PlayerPrefs.GetFloat(StaticUrlScript.Volume, 1);
         CountBreakableBlocks();
     }
 
@@ -33,7 +37,7 @@ public class Block : MonoBehaviour
         {
             HandleHit();
 
-        } 
+        }
     }
 
     private void ShowNextHitSprite()
@@ -43,10 +47,10 @@ public class Block : MonoBehaviour
         if (spriteIndex >= 0 && spriteIndex < hitSprites.Length && hitSprites[spriteIndex] != null)
         {
             GetComponent<SpriteRenderer>().sprite = hitSprites[spriteIndex];
-        }       
+        }
         else
         {
-            Debug.LogError("Block Sprite Missing Error!" +gameObject.name);
+            Debug.LogError("Block Sprite Missing Error!" + gameObject.name);
         }
     }
 
@@ -70,13 +74,13 @@ public class Block : MonoBehaviour
         Destroy(gameObject);
         level.BlockDestroyed();
         TriggerSparkleVFX();
-      
+
     }
 
     private void PlayBlockDestroySFX()
     {
         GameSession.Instance.AddToScore();
-        AudioSource.PlayClipAtPoint(breakSound, Camera.main.transform.position);
+        AudioSource.PlayClipAtPoint(breakSound, Camera.main.transform.position, volume);
     }
 
     private void TriggerSparkleVFX()

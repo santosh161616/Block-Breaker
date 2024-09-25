@@ -1,5 +1,6 @@
 using Coffee.UIExtensions;
 using DG.Tweening;
+using Firebase.Analytics;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -13,7 +14,7 @@ public class LoaderManager : MonoBehaviour
     public Slider StartGameSlider;
     public ShinyEffectForUGUI imageEffectUI;
     public GameObject LoaderObject, confirmationPanel, RetryPanel, noAdsPanel;
-    public TMP_Text headingTxt, subHeadingTxt, btnText, infoTxt;
+    public TMP_Text headingTxt, btnText;
     public Image headerImage, RetryImage, GameLogo;
     public Button RetryButton, buyBtn;
     public TMP_Text RetryTextHeading, RetryText;
@@ -66,6 +67,8 @@ public class LoaderManager : MonoBehaviour
         StartCoroutine(Loading());
         StartGameSlider.DOValue(1f, 5f).SetEase(DG.Tweening.Ease.Linear).OnComplete(() =>
         {
+            //Launch GameFirst Time
+            FirebaseAnalytics.LogEvent(StaticUrlScript.GameLaunched_Firebase);
             if (GameStartLoader != null)
                 GameStartLoader.SetActive(false);
         });
@@ -113,7 +116,7 @@ public class LoaderManager : MonoBehaviour
         Utility.myLog("Loader DISEnabled--- >");
     }
 
-    public void OpenConfirmationPanel(UnityAction actionToPerform, Image item, string headerTxt = null, string subHeaderTxt = null, string btnTxt = null)
+    public void OpenConfirmationPanel(UnityAction actionToPerform, /*Image item,*/ string headerTxt = null, string btnTxt = null)
     {
         confirmationPanel?.SetActive(true);
         buyBtn?.onClick.RemoveAllListeners();
@@ -121,10 +124,10 @@ public class LoaderManager : MonoBehaviour
         buyBtn?.onClick.AddListener(actionToPerform);
 
         Utility.myLog("Listener Added ->" + actionToPerform);
-        headerImage.sprite = item.sprite;
-        headingTxt.text = (headerTxt == null) ? "Want to Buy?" : headerTxt;
-        subHeadingTxt.text = (subHeaderTxt == null) ? "buy to get this item" : subHeaderTxt;
-        btnText.text = (btnTxt == null) ? "Buy" : btnTxt;
+        //headerImage.sprite = item.sprite;
+        headingTxt.text = (headerTxt == null) ? "ARE YOU SURE YOU WANT TO CONTINUE?" : headerTxt;
+        //subHeadingTxt.text = (subHeaderTxt == null) ? "buy to get this item" : subHeaderTxt;
+        btnText.text = (btnTxt == null) ? "YES" : btnTxt;
     }
 
 

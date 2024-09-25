@@ -16,13 +16,15 @@ public class Ball : MonoBehaviour
     //State
     Vector2 paddleToBallVector;
     private bool _hasStarted = false;
-    private bool _enableInput = true;    
+    private bool _enableInput = true;
 
     //Cache component reference.
     AudioSource myAudioSource;
     Rigidbody2D myRigidBody2D;
 
     public static Ball instance;
+    //Sound
+    float volume;
 
     public bool HasStarted
     {
@@ -51,6 +53,8 @@ public class Ball : MonoBehaviour
         paddleToBallVector = transform.position - paddle1.transform.position;
         myAudioSource = GetComponent<AudioSource>();
         myRigidBody2D = GetComponent<Rigidbody2D>();
+
+        volume = PlayerPrefs.GetFloat(StaticUrlScript.Volume, 1);
     }
 
     // Update is called once per frame
@@ -89,7 +93,7 @@ public class Ball : MonoBehaviour
         if (_enableInput)
         {
             AudioClip clip = ballSounds[UnityEngine.Random.Range(0, ballSounds.Length)];
-            myAudioSource.PlayOneShot(clip);
+            myAudioSource.PlayOneShot(clip, volume);
 
             myRigidBody2D.velocity = myRigidBody2D.velocity.normalized * 7f;
             //Debug.Log(myRigidBody2D.velocity.normalized + "Before Tweak" + velocityTweak);
