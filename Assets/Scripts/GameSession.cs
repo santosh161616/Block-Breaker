@@ -289,6 +289,7 @@ public class GameSession : MonoBehaviour
     /// </summary>
     public void ResetGameLevel()
     {
+        LoaderManager.Instance.EnableLoader();
         Utility.myLog("Game Level  Resetted!");
         gameOverPanel?.SetActive(false);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);

@@ -18,7 +18,7 @@ public class StartMenu : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if(_optionsPanel.activeInHierarchy)
+            if (_optionsPanel.activeInHierarchy)
                 _optionsPanel.SetActive(false);
         }
     }
@@ -35,14 +35,21 @@ public class StartMenu : MonoBehaviour
 
     public void ScoreReset()
     {
-        PlayerPrefs.DeleteKey(StaticUrlScript.highScore);
-        PlayerPrefs.Save();
+        LoaderManager.Instance.OpenConfirmationPanel(() =>
+        {
+            PlayerPrefs.DeleteKey(StaticUrlScript.highScore);
+            PlayerPrefs.Save();
+            Utility.myLog("Score Reseted!");
+        });       
     }
 
     public void ResetLevel()
     {
-        PlayerPrefs.DeleteKey(StaticUrlScript.currentLevel);
-        PlayerPrefs.Save();
+        LoaderManager.Instance.OpenConfirmationPanel(() =>
+        {
+            PlayerPrefs.DeleteKey(StaticUrlScript.currentLevel);
+            PlayerPrefs.Save();
+        });
     }
 
     public void AdjustVolume(float value)

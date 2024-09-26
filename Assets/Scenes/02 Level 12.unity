@@ -2761,7 +2761,7 @@ Transform:
   m_GameObject: {fileID: 1231398112}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1864.9398, y: -1957, z: -22379.277}
+  m_LocalPosition: {x: -1864.9398, y: -1650, z: -22379.277}
   m_LocalScale: {x: 248.65865, y: 248.65865, z: 248.65865}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5132,11 +5132,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Leve_Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 8868825327300706523, guid: d3ec9b07002196647948abffca756f79,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8868825327300706523, guid: d3ec9b07002196647948abffca756f79,
         type: 3}
